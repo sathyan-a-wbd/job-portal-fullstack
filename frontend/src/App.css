@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/* 
+cpation : 14px
+body: 18px
+Heading 32px
+Display : 48px 
+
+pick one font family
+
+spacing : 8,16,24,32,48px
+
+grid: 8px
+*/
+* {
+  font-family: "Roboto", sans-serif;
+
+  box-sizing: border-box;
+}
+body {
+  background: linear-gradient(to right, #ffffff, #e4eff8);
+}
+.roboto {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+.bea-blue {
+  color: #bcd4e6;
+  background: #bcd4e6;
+}
+.baby-blue {
+  color: #89cff0;
+  background: #89cff0;
+}
+.blue-eyes {
+  color: #a1caf1;
+  background: #a1caf1;
+}
+.ltl-by-blue {
+  color: #6ca0dc;
+  background: #6ca0dc;
+}
+.con-blue {
+  color: #6495ed;
+  background: #6495ed;
+}
+.con-blue {
+  color: #4485fd;
+  background: #4485fd;
+}
+/*
+Beau blue
+Hex #BCD4E6
+RGB 188, 212, 230
+CMYK 18, 8, 0, 10
+
+Baby blue
+Hex #89CFF0
+RGB 137, 207, 240
+CMYK 43, 14, 0, 6
+
+Baby Blue Eyes
+Hex #A1CAF1
+RGB 161, 202, 241
+CMYK 33, 16, 0, 5
+
+Little Boy blue
+Hex #6CA0DC
+RGB 108, 160, 220
+CMYK 51, 27, 0, 14
+
+Cornflower blue
+Hex #6495ED
+RGB 100, 149, 237
+CMYK 58, 37, 0, 7*/
