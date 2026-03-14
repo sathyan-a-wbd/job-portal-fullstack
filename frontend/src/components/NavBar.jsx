@@ -76,10 +76,10 @@ const NavBar = ({ image }) => {
         {/* navlinks */}
         <nav className="order-2 sm:block hidden">
           <ul className="flex gap-5 items-center tracking-wide">
-            <li className="hover:text-[#6ca0dc] transition-all duration-150">
+            <li className="hover:text-[#6ca0dc] transition-all duration-300 ease-in-out">
               <Link to={"/"}>Home</Link>
             </li>
-            <li className="hover:text-[#6ca0dc]">
+            <li className="hover:text-[#6ca0dc] transition-all duration-300 ease-in-out">
               <Link to={"/jobs-list"}>Jobs</Link>
             </li>
           </ul>
