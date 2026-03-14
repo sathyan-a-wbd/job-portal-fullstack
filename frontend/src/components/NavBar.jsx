@@ -6,11 +6,13 @@ import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import NavbarProfileDashboard from "./NavbarProfileDashboard";
+import Searchbar from "./Searchbar";
 const NavBar = ({ image }) => {
   const [notification, setNotification] = useState(10);
   const [inputFocus, setInputFocus] = useState(false);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
+  const [userStatus, setUserStatus] = useState(false);
 
   return (
     <section className="w-full shadow roboto">
@@ -35,33 +37,11 @@ const NavBar = ({ image }) => {
             <h3 className="w-full text-left px-1 text-sm tracking-widest text-[#4485fd]">
               Jobist<span className="text-red-400 text-sm">.com</span>
             </h3>
-            <div
-              className={`flex gap-5 items-center inset-shadow-5xs justify-start ring-1 ring-[#bcd4e6] w-full px-5 py-5 rounded-xl shadow`}
-            >
-              <div
-                className={`w-20 h-20 overflow-hidden bg-[#6ca0dc2f] rounded-full flex items-center justify-center ring-3 ring-green-500`}
-              >
-                {image ?
-                  <img src={image} alt="profile-img" loading="lazy" />
-                : <FaUserAlt
-                    color="#4485fd"
-                    className="text-7xl translate-y-1 "
-                  />
-                }
-              </div>
-              <div>
-                <h2 className="text-lg">Name Initial</h2>
-                <span className="text-sm text-gray-500">xyz-xxxssss</span>
-                <li onClick={() => setMobileNav(false)}>
-                  <Link
-                    to={"/profile-dashboard"}
-                    className="text-[16px] text-[#4485fd]"
-                  >
-                    View & Update{" "}
-                  </Link>
-                </li>
-              </div>
-            </div>
+            <NavbarProfileDashboard
+              userStatus={userStatus}
+              image={image}
+              setMobileNav={setMobileNav}
+            />
             <span className="w-full h-0.5  rounded-sm bg-[#4485fd31]">
               {""}
             </span>
@@ -96,46 +76,16 @@ const NavBar = ({ image }) => {
         {/* navlinks */}
         <nav className="order-2 sm:block hidden">
           <ul className="flex gap-5 items-center tracking-wide">
-            <li>
+            <li className="hover:text-[#6ca0dc] transition-all duration-150">
               <Link to={"/"}>Home</Link>
             </li>
-            <li>
+            <li className="hover:text-[#6ca0dc]">
               <Link to={"/jobs-list"}>Jobs</Link>
             </li>
           </ul>
         </nav>
         {/* search-bar */}
-        <div
-          className={` order-3 ${inputFocus ? "order-4  -z-10 translate-y-35" : " "} fixed left-0 sm:z-0 sm:translate-y-0 -translate-y-150  sm:relative sm:opacity-100 sm:flex w-full lg:order-3 sm:order-4 lg:w-auto transition-all duration-500 flex items-center justify-center`}
-        >
-          <form className={`searchbar} w-full`}>
-            {/* searchbar */}
-            <div className="searchbox  w-full overflow-hidden flex flex-col sm:flex-row items-center rounded-4xl sm:ring-2 ring-0 sm:ring-[#6ca0dc] px-1 ">
-              <input
-                type="text"
-                placeholder="Enter Job title, Company name, etc"
-                className={`px-4 py-5 flex-1 border-none outline-none w-full `}
-              />
-
-              <span className="w-[90%] h-0.5 sm:w-0.5 sm:h-10 sm:bg-gray-200 bg-gray-100 shadow-lg"></span>
-
-              <input
-                type="text"
-                placeholder="Enter location"
-                className="px-4 py-5 w-full border-none outline-none sm:w-[30%]"
-              />
-
-              <button
-                className={`flex gap-1 w-full sm:w-auto items-center tracking-wider cursor-pointer justify-center bg-[#4485fd] text-white rounded-4xl px-3 py-4 `}
-              >
-                <span className="flex items-center gap-1 md:text-sm ">
-                  Find Jobs{" "}
-                  <IoSearch className="font-bold text-white text-xl" />{" "}
-                </span>
-              </button>
-            </div>
-          </form>
-        </div>
+        <Searchbar inputFocus={inputFocus} />
         {/* profile and notification */}
         <nav className="order-3 lg:order-4">
           <ul className="flex items-center gap-5">
@@ -149,7 +99,10 @@ const NavBar = ({ image }) => {
                 onClick={() => setInputFocus((prev) => !prev)}
               />
             }
-            <div className={`cursor-pointer relative  inline-block `}>
+            <Link
+              to={"/notifications"}
+              className={`cursor-pointer relative  inline-block `}
+            >
               <FaRegBell className="text-xl text-shadow " />
               {notification === 0 ?
                 ""
@@ -157,7 +110,7 @@ const NavBar = ({ image }) => {
                   {notification}
                 </span>
               }
-            </div>
+            </Link>
             <div className="hidden items-center justify-center relative sm:flex">
               <FaUserAlt
                 className="text-xl text-shadow cursor-pointer"
@@ -168,9 +121,12 @@ const NavBar = ({ image }) => {
                 <div
                   onMouseEnter={() => setUserHover(true)}
                   onMouseLeave={() => setUserHover(false)}
-                  className="absolute min-w-40 w-40 top-6 right-0 bg-[#f8fcff] backdrop:blur rounded-lg border border-white/40 px-4 py-3"
+                  className="absolute  w-fit whitespace-nowrap top-6 right-0 bg-[#f8fcff] backdrop:blur rounded-lg border border-white/40 px-4 py-3"
                 >
-                  <NavbarProfileDashboard userStatus={true} image={image} />
+                  <NavbarProfileDashboard
+                    userStatus={userStatus}
+                    image={image}
+                  />
                 </div>
               )}
             </div>
