@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
+import NavbarProfileDashboard from "./NavbarProfileDashboard";
 const NavBar = ({ image }) => {
   const [notification, setNotification] = useState(10);
   const [inputFocus, setInputFocus] = useState(false);
@@ -12,7 +13,7 @@ const NavBar = ({ image }) => {
   const [mobileNav, setMobileNav] = useState(false);
 
   return (
-    <section className="w-full shadow roboto ">
+    <section className="w-full shadow roboto">
       <div className="w-full flex flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}
         <div className="flex items-center justify-between relative sm:hidden w-10">
@@ -28,11 +29,14 @@ const NavBar = ({ image }) => {
 
         {/* Mobile-navbar */}
         <nav
-          className={`sm:order-2 text-gray-800 sm:hidden  fixed w-90 bg-[#f4f9fd] border border-gray-200 transition-transform duration-500 ease-in-out rounded-r-3xl shadow-2xl backdrop:blur-3xl h-screen top-0 left-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
+          className={`sm:order-2 text-gray-800 sm:hidden  fixed w-[80%] bg-[#f4f9fd] border border-gray-200 transition-transform duration-500 ease-in-out rounded-r-3xl shadow-2xl backdrop:blur-3xl h-screen top-0 left-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
         >
           <ul className="px-3 py-20 h-screen flex flex-col gap-5 items-center tracking-wider">
+            <h3 className="w-full text-left px-1 text-sm tracking-widest text-[#4485fd]">
+              Jobist<span className="text-red-400 text-sm">.com</span>
+            </h3>
             <div
-              className={`flex gap-5 items-center inset-shadow-5xs justify-start ring-1 ring-[#bcd4e6] w-full px-5 py-5 rounded-lg shadow`}
+              className={`flex gap-5 items-center inset-shadow-5xs justify-start ring-1 ring-[#bcd4e6] w-full px-5 py-5 rounded-xl shadow`}
             >
               <div
                 className={`w-20 h-20 overflow-hidden bg-[#6ca0dc2f] rounded-full flex items-center justify-center ring-3 ring-green-500`}
@@ -102,7 +106,7 @@ const NavBar = ({ image }) => {
         </nav>
         {/* search-bar */}
         <div
-          className={` order-3 ${inputFocus ? "order-4 translate-x-0 px-3 -z-10 translate-y-35" : " "} fixed sm:z-0 sm:translate-y-0   -translate-y-150 sm:translate-x-0 sm:relative sm:opacity-100 sm:flex w-full lg:order-3 sm:order-4 lg:w-auto transition-all duration-500  items-center justify-center`}
+          className={` order-3 ${inputFocus ? "order-4  -z-10 translate-y-35" : " "} fixed left-0 sm:z-0 sm:translate-y-0 -translate-y-150  sm:relative sm:opacity-100 sm:flex w-full lg:order-3 sm:order-4 lg:w-auto transition-all duration-500 flex items-center justify-center`}
         >
           <form className={`searchbar} w-full`}>
             {/* searchbar */}
@@ -118,7 +122,7 @@ const NavBar = ({ image }) => {
               <input
                 type="text"
                 placeholder="Enter location"
-                className="px-4 py-5 w-full sm:w-auto border-none outline-none sm:w-[30%]"
+                className="px-4 py-5 w-full border-none outline-none sm:w-[30%]"
               />
 
               <button
@@ -154,7 +158,7 @@ const NavBar = ({ image }) => {
                 </span>
               }
             </div>
-            <div className="flex items-center justify-center relative">
+            <div className="hidden items-center justify-center relative sm:flex">
               <FaUserAlt
                 className="text-xl text-shadow cursor-pointer"
                 onMouseEnter={() => setUserHover(true)}
@@ -164,16 +168,9 @@ const NavBar = ({ image }) => {
                 <div
                   onMouseEnter={() => setUserHover(true)}
                   onMouseLeave={() => setUserHover(false)}
-                  className="absolute w-40 top-6 right-0 bg-[#f8fcff] backdrop:blur rounded-lg border border-white/40 px-4 py-3"
+                  className="absolute min-w-40 w-40 top-6 right-0 bg-[#f8fcff] backdrop:blur rounded-lg border border-white/40 px-4 py-3"
                 >
-                  <ul className="flex flex-col  w-full">
-                    <li className="text-sm text-[#6ca0dc] border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between">
-                      Login <FaAnglesRight />
-                    </li>
-                    <li className="text-sm text-[#6ca0dc]  border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between">
-                      SignUp <FaAnglesRight />
-                    </li>
-                  </ul>
+                  <NavbarProfileDashboard userStatus={true} image={image} />
                 </div>
               )}
             </div>

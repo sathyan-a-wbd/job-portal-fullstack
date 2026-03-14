@@ -18,7 +18,7 @@ grid: 8px
   box-sizing: border-box;
 }
 body {
-  background: linear-gradient(to right, #ffffff, #e4eff8);
+  background: linear-gradient(to right, #ffffff, #edf4fa);
 }
 .roboto {
   font-family: "Roboto", sans-serif;
