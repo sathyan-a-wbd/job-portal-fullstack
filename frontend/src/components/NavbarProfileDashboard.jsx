@@ -10,13 +10,13 @@ const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
         <div>
           <Link
             to={"/login"}
-            className="text-sm text-[#6ca0dc] cursor-pointer border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
+            className="text-sm text-[#4485fd] cursor-pointer border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
           >
             Login <FaAnglesRight />
           </Link>
           <Link
             to={"/register"}
-            className="text-sm text-[#6ca0dc] cursor-pointer  border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
+            className="text-sm text-[#4485fd] cursor-pointer  border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
           >
             SignUp <FaAnglesRight />
           </Link>

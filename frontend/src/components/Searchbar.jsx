@@ -8,7 +8,7 @@ const Searchbar = ({ inputFocus }) => {
     >
       <form className={`searchbar} w-full`}>
         {/* searchbar */}
-        <div className="searchbox  w-full overflow-hidden flex flex-col sm:flex-row items-center rounded-4xl sm:ring-2 ring-0 sm:ring-[#6ca0dc] px-1 ">
+        <div className="searchbox  w-full overflow-hidden flex flex-col sm:flex-row items-center rounded-4xl sm:ring-1 ring-0 sm:ring-[#bcd4e6] px-1 pr-3 shadow ">
           <input
             type="text"
             placeholder="Enter Job title, Company name, etc"
@@ -24,11 +24,10 @@ const Searchbar = ({ inputFocus }) => {
           />
 
           <button
-            className={`flex gap-1 w-full sm:w-auto items-center tracking-wider cursor-pointer justify-center bg-[#4485fd] text-white rounded-4xl px-3 py-4 `}
+            className={`flex gap-1 w-full sm:w-auto items-center tracking-wider cursor-pointer justify-center bg-[#4485fd] text-white rounded-4xl px-3 py-3 `}
           >
             <span className="flex items-center gap-1 md:text-sm ">
-              Find Jobs{" "}
-              <IoSearch className="font-bold text-white text-xl" />{" "}
+              <IoSearch className="font-bold text-white " /> Search
             </span>
           </button>
         </div>

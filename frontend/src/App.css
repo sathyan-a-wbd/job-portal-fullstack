@@ -18,7 +18,7 @@ grid: 8px
   box-sizing: border-box;
 }
 body {
-  background: linear-gradient(to right, #ffffff, #edf4fa);
+  background: linear-gradient(to right, #ffffff, #f3f3f3);
 }
 .roboto {
   font-family: "Roboto", sans-serif;
@@ -26,6 +26,9 @@ body {
 
   font-style: normal;
   font-variation-settings: "wdth" 100;
+}
+.inter {
+  font-family: "inter", sans-serif;
 }
 .bea-blue {
   color: #bcd4e6;
