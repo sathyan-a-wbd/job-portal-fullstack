@@ -12,11 +12,11 @@ const NavBar = ({ image }) => {
   const [inputFocus, setInputFocus] = useState(false);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
-  const [userStatus, setUserStatus] = useState(false);
+  const [userStatus, setUserStatus] = useState(true);
 
   return (
-    <section className="w-full shadow roboto bg-white">
-      <div className="w-full flex flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
+    <section className="w-full shadow roboto bg-white ">
+      <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}
         <div className="flex items-center justify-between relative sm:hidden w-10">
           <HiMiniBars3BottomLeft

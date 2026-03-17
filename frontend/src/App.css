@@ -79,3 +79,23 @@ Cornflower blue
 Hex #6495ED
 RGB 100, 149, 237
 CMYK 58, 37, 0, 7*/
+
+/* horizontal scrollbar */
+.custom-scroll::-webkit-scrollbar {
+  height: 2px;
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: white; /* light gray */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: grey; /* slate-400 */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: grey; /* slate-500 */
+}

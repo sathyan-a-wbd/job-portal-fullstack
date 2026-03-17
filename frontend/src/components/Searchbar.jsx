@@ -4,11 +4,11 @@ import { IoSearch } from "react-icons/io5";
 const Searchbar = ({ inputFocus }) => {
   return (
     <div
-      className={` order-3 ${inputFocus ? "order-4  -z-10 translate-y-35" : " "} fixed left-0 sm:z-0 sm:translate-y-0 -translate-y-150  sm:relative sm:opacity-100 sm:flex w-full lg:order-3 sm:order-4 lg:w-auto transition-all duration-500 flex items-center justify-center`}
+      className={` order-3 backdrop:blur-3xl w-full  ${inputFocus ? "order-4 -z-10 translate-y-34" : " "} fixed left-0  sm:z-0 sm:translate-y-0 -translate-y-150  sm:relative sm:opacity-100 sm:flex w-full lg:order-3 sm:order-4 lg:w-auto transition-all duration-500 flex items-center justify-center`}
     >
-      <form className={`searchbar} w-full`}>
+      <form className={`searchbar bg-white w-full`}>
         {/* searchbar */}
-        <div className="searchbox  w-full overflow-hidden flex flex-col sm:flex-row items-center rounded-4xl sm:ring-1 ring-0 sm:ring-[#bcd4e6] px-1 pr-3 shadow ">
+        <div className="searchbox  w-full overflow-hidden flex flex-col sm:flex-row items-center sm:rounded-4xl sm:ring-1 ring-0 sm:ring-[#bcd4e6] py-2 sm:py-0 px-1 sm:pr-3 shadow ">
           <input
             type="text"
             placeholder="Enter Job title, Company name, etc"

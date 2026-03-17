@@ -22,7 +22,7 @@ const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
           </Link>
         </div>
       : <div
-          className={`flex gap-5 items-center inset-shadow-5xs justify-start w-full ring-1 ring-[#bcd4e6] sm:ring-0 sm:ring-[#bcd4e6] px-5 py-5 rounded-xl shadow`}
+          className={`flex  gap-5 items-center bg-white inset-shadow-5xs justify-start w-full ring-1 ring-[#bcd4e6] sm:ring-0 sm:ring-[#bcd4e6] px-5 py-5 rounded-xl shadow`}
         >
           <div
             className={`w-20 h-20 min-h-20 min-w-20 overflow-hidden bg-[#6ca0dc2f] rounded-full  ring-3 ring-green-500`}
@@ -43,7 +43,7 @@ const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
               }
             </Link>
           </div>
-          <div>
+          <div className="">
             <h2 className="text-lg">Name Initial</h2>
             <span className="text-sm text-gray-500 text-wrap max-w-80">
               xyz-xxxssscfffff fffffffffffffffffffffffs
