@@ -18,7 +18,7 @@ const Jobcard = ({ jobDetails }) => {
       {jobDetails.map((job) => (
         <Link
           onClick={() => dispatch(setSelectedJob(true))}
-          to={`${locationUrl.pathname}?jobidelmentrfid=${job.id}`}
+          to={`${locationUrl.pathname}?job_id=${job.id}`}
           replace
           state={{ fromList: true }}
           key={job.id}

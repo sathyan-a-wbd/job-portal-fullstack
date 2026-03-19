@@ -10,35 +10,39 @@ import { MdBookmarkBorder } from "react-icons/md";
 import { MdBookmarkAdded } from "react-icons/md";
 import { LiaWalletSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSelectedJob } from "../features/jobs/jobSlice";
 
 const JobDetails = ({ jobDetails }) => {
   const [searchParams] = useSearchParams();
-  const jobId = searchParams.get("jobidelmentrfid");
+  const jobId = searchParams.get("job_id");
 
   const job =
     jobDetails.find((job) => job.id === Number(jobId)) || jobDetails[0];
 
   const dispatch = useDispatch();
-  const screenWidth = window.innerWidth;
-  console.log(screenWidth);
+  const selectedJob = useSelector((state) => state.jobs.selectedJob);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
+    const handleScrollLock = () => {
+      const isMobileOrTab = window.innerWidth < 1024;
+
+      if (selectedJob && isMobileOrTab) {
         document.body.style.overflow = "hidden";
       } else {
-        document.body.style.overflow = "auto";
+        document.body.style.overflow = " ";
       }
     };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    handleScrollLock();
+    window.addEventListener("resize", handleScrollLock);
+    return () => {
+      document.body.style.overflow = "auto";
+      window.removeEventListener("resize", handleScrollLock);
+    };
+  }, [selectedJob]);
   return (
     <section
-      className={`fixed h-screen  overflow-y-auto custom-scroll z-30 md:relative md:z-0 px-2 md:py-2 top-0 left-0 `}
+      className={`fixed h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:px-2 md:py-2 top-0 left-0 `}
     >
       {job && (
         <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">

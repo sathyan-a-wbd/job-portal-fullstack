@@ -1,6 +1,6 @@
 import React from "react";
 import { IoSearch } from "react-icons/io5";
-
+import { CiLocationOn } from "react-icons/ci";
 const Searchbar = () => {
   return (
     <div
@@ -9,18 +9,22 @@ const Searchbar = () => {
       <form className={`searchbar  w-full `}>
         {/* searchbar */}
         <div className="searchbox px-2 shadow-[1px_2px_10px_#bcd4e6] sm:shadow  w-full overflow-hidden flex flex-col sm:flex-row items-center rounded-lg sm:rounded-4xl sm:ring-1 ring-0 sm:ring-[#bcd4e6] py-2 sm:py-0  sm:pr-3 ">
-          <input
-            type="text"
-            placeholder="Enter Job title, Company name, etc"
-            className={`py-3 px-4 sm:py-5 flex-1 border-none outline-none w-full `}
-          />
-          <span className="w-full sm:w-0.5 sm:h-full h-0.5 bg-gray-200"></span>
-          <input
-            type="text"
-            placeholder="Enter location"
-            className="py-3 px-4 sm:py-5 w-full border-none outline-none sm:w-[30%]"
-          />
-
+          <div className="flex w-full items-center">
+            <IoSearch size={20} color="grey" className="font-bold" />
+            <input
+              type="text"
+              placeholder="Enter Job title, Company name, etc"
+              className={`py-3 px-4 sm:py-5 flex-1 border-none outline-none w-full `}
+            />
+          </div>
+          <div className="flex w-full items-center">
+            <CiLocationOn size={20} color="gray" className="font-bold" />
+            <input
+              type="text"
+              placeholder="Enter location"
+              className="py-3 px-4 sm:py-5 w-full border-none outline-none sm:w-[30%]"
+            />
+          </div>
           <button
             className={`flex gap-1 w-full sm:w-auto items-center tracking-wider cursor-pointer justify-center bg-[#6ca0dc]  text-white rounded-lg sm:rounded-4xl py-2 px-3 sm:py-3 `}
           >

@@ -98,7 +98,7 @@ const NavBar = ({ image }) => {
               <FaRegBell className="text-xl text-shadow " />
               {notification === 0 ?
                 ""
-              : <span className=" text-xs text-white absolute w-4 h-4 -top-2 -right-2 rounded-full flex items-center justify-center bg-amber-500">
+              : <span className=" text-[8px] text-white absolute w-5 h-5 -top-3 -right-2 rounded-[50%] flex items-center justify-center bg-amber-500">
                   {notification}
                 </span>
               }
