@@ -1,34 +1,32 @@
 import React from "react";
 import { IoSearch } from "react-icons/io5";
 
-const Searchbar = ({ inputFocus }) => {
+const Searchbar = () => {
   return (
     <div
-      className={` order-3 backdrop:blur-3xl w-full  ${inputFocus ? "order-4 -z-10 translate-y-34" : " "} fixed left-0  sm:z-0 sm:translate-y-0 -translate-y-150  sm:relative sm:opacity-100 sm:flex w-full lg:order-3 sm:order-4 lg:w-auto transition-all duration-500 flex items-center justify-center`}
+      className={` order-4   sm:rounded-0 backdrop:blur-3xl  left-0  sm:z-0 sm:translate-y-0  sm:relative sm:opacity-100 sm:flex w-full lg:order-3 sm:order-4 lg:w-auto transition-all duration-500  rounded-lg sm:rounded-0 sm:px-0 sm:py-0  flex items-center  justify-center`}
     >
-      <form className={`searchbar bg-white w-full`}>
+      <form className={`searchbar  w-full `}>
         {/* searchbar */}
-        <div className="searchbox  w-full overflow-hidden flex flex-col sm:flex-row items-center sm:rounded-4xl sm:ring-1 ring-0 sm:ring-[#bcd4e6] py-2 sm:py-0 px-1 sm:pr-3 shadow ">
+        <div className="searchbox px-2 shadow-lg sm:shadow  w-full overflow-hidden flex flex-col sm:flex-row items-center rounded-lg sm:rounded-4xl sm:ring-1 ring-0 sm:ring-[#bcd4e6] py-2 sm:py-0  sm:pr-3 ">
           <input
             type="text"
             placeholder="Enter Job title, Company name, etc"
-            className={`px-4 py-5 flex-1 border-none outline-none w-full `}
+            className={`py-3 px-4 sm:py-5 flex-1 border-none outline-none w-full `}
           />
 
-          <span className="w-[90%] h-0.5 sm:w-0.5 sm:h-10 sm:bg-gray-200 bg-gray-100 shadow-lg"></span>
+          <hr />
 
           <input
             type="text"
             placeholder="Enter location"
-            className="px-4 py-5 w-full border-none outline-none sm:w-[30%]"
+            className="py-3 px-4 sm:py-5 w-full border-none outline-none sm:w-[30%]"
           />
 
           <button
-            className={`flex gap-1 w-full sm:w-auto items-center tracking-wider cursor-pointer justify-center bg-[#4485fd] text-white rounded-4xl px-3 py-3 `}
+            className={`flex gap-1 w-full sm:w-auto items-center tracking-wider cursor-pointer justify-center bg-[#6ca0dc]  text-white rounded-lg sm:rounded-4xl py-2 px-3 sm:py-3 `}
           >
-            <span className="flex items-center gap-1 md:text-sm ">
-              <IoSearch className="font-bold text-white " /> Search
-            </span>
+            <IoSearch className="font-bold text-white " /> Search
           </button>
         </div>
       </form>

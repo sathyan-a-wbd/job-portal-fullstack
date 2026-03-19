@@ -1,25 +1,36 @@
 import React from "react";
 
-import { Link, useParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { PiSuitcaseSimpleLight } from "react-icons/pi";
 import { CiLocationOn } from "react-icons/ci";
 import { CiMapPin } from "react-icons/ci";
-
+import { IoClose } from "react-icons/io5";
 import { LuBookText } from "react-icons/lu";
 import { MdBookmarkBorder } from "react-icons/md";
 import { MdBookmarkAdded } from "react-icons/md";
 import { LiaWalletSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
-const JobDetails = ({ jobDetails, viewJobId }) => {
-  const { id } = useParams();
-  console.log(id);
+import { useDispatch } from "react-redux";
+import { setSelectedJob } from "../features/jobs/jobSlice";
 
-  const job = jobDetails.find((job) => job.id === Number(id));
+const JobDetails = ({ jobDetails }) => {
+  const [searchParams] = useSearchParams();
+  const jobId = searchParams.get("jobidelmentrfid");
+
+  const job =
+    jobDetails.find((job) => job.id === Number(jobId)) || jobDetails[0];
+  const dispatch = useDispatch();
 
   return (
-    <section>
+    <section className={` sticky sm:relative top-0 left-0 z-30`}>
       {job && (
-        <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-3xl shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">
+        <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">
+          <Link className="w-full flex items-center justify-end">
+            <IoClose
+              size={20}
+              onClick={() => dispatch(setSelectedJob(false))}
+            />
+          </Link>
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between py-2">
               <div>

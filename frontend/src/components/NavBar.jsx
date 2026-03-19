@@ -15,7 +15,7 @@ const NavBar = ({ image }) => {
   const [userStatus, setUserStatus] = useState(true);
 
   return (
-    <section className="w-full shadow roboto bg-white ">
+    <section className="w-full sm:shadow roboto sm:bg-white  ">
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}
         <div className="flex items-center justify-between relative sm:hidden w-10">
@@ -69,8 +69,8 @@ const NavBar = ({ image }) => {
         {/* //logo */}
 
         <div className="logo order-1 text-2xl font-semibold tracking-wider">
-          <h3 className="text-[#4485fd]">
-            Jobist<span className="text-red-400 text-xl">.com</span>
+          <h3 className="text-[#4485fd] text-lg sm:text-xl">
+            Jobist<span className="text-red-400 text-lg sm:text-xl">.com</span>
           </h3>
         </div>
         {/* navlinks */}
@@ -85,20 +85,12 @@ const NavBar = ({ image }) => {
           </ul>
         </nav>
         {/* search-bar */}
-        <Searchbar inputFocus={inputFocus} />
+
+        <Searchbar />
+
         {/* profile and notification */}
         <nav className="order-3 lg:order-4">
           <ul className="flex items-center gap-5">
-            {inputFocus ?
-              <IoClose
-                className="font-bold  sm:hidden text-xl cursor-pointer"
-                onClick={() => setInputFocus(false)}
-              />
-            : <IoSearch
-                className="font-bold sm:hidden block text-xl cursor-pointer"
-                onClick={() => setInputFocus((prev) => !prev)}
-              />
-            }
             <Link
               to={"/notifications"}
               className={`cursor-pointer relative  inline-block `}
