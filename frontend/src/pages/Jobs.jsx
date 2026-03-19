@@ -20,8 +20,10 @@ const Jobs = ({ jobDetails }) => {
           </h3>
           <Jobcard jobDetails={jobDetails} />
         </div>
-        <div className={`w-full md:w-[55%]  md:block py-1 px-2`}>
-          {isSelectedJob && <JobDetails jobDetails={jobDetails} />}
+        <div
+          className={`${isSelectedJob ? "block" : "hidden"} w-full md:w-[55%]  md:block py-1 px-2`}
+        >
+          <JobDetails jobDetails={jobDetails} />
         </div>
       </div>
     </section>

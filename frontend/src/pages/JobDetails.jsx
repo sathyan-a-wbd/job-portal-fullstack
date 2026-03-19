@@ -19,21 +19,30 @@ const JobDetails = ({ jobDetails }) => {
 
   const job =
     jobDetails.find((job) => job.id === Number(jobId)) || jobDetails[0];
-  const dispatch = useDispatch();
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
 
-    return () => {
-      document.body.style.overflow = "auto";
+  const dispatch = useDispatch();
+  const screenWidth = window.innerWidth;
+  console.log(screenWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
     };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   return (
     <section
-      className={`fixed h-screen  overflow-y-auto sm:relative  top-0 left-0 z-30`}
+      className={`fixed h-screen  overflow-y-auto custom-scroll z-30 md:relative md:z-0 px-2 md:py-2 top-0 left-0 `}
     >
       {job && (
         <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">
-          <Link className="w-full flex items-center justify-end">
+          <Link className="w-full md:hidden flex items-center justify-end">
             <IoClose
               size={20}
               onClick={() => dispatch(setSelectedJob(false))}

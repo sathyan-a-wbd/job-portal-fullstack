@@ -81,7 +81,7 @@ CMYK 58, 37, 0, 7*/
 /* horizontal scrollbar */
 .custom-scroll::-webkit-scrollbar {
   height: 2px;
-  width: 6px;
+  width: 5px;
 }
 
 .custom-scroll::-webkit-scrollbar-track {
@@ -90,10 +90,10 @@ CMYK 58, 37, 0, 7*/
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: grey; /* slate-400 */
+  background: #bcd4e6; /* slate-400 */
   border-radius: 10px;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb:hover {
-  background: grey; /* slate-500 */
+  background: #bcd4e6; /* slate-500 */
 }
