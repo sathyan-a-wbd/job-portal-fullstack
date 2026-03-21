@@ -22,7 +22,7 @@ const Searchbar = () => {
             <input
               type="text"
               placeholder="Enter location"
-              className="py-3 px-4 sm:py-5 w-full border-none outline-none sm:w-[30%]"
+              className="py-3 px-4 sm:py-5 w-full border-none outline-none sm:w-full"
             />
           </div>
           <button

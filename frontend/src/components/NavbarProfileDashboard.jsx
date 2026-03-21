@@ -2,14 +2,19 @@ import React from "react";
 import { FaAnglesRight } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setIsLogin } from "../features/user/userSlice";
 
 const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
+  const dispatch = useDispatch();
+
   return (
     <ul className="flex flex-col w-full">
       {!userStatus ?
         <div>
           <Link
             to={"/login"}
+            onClick={() => dispatch(setIsLogin(true))}
             className="text-sm text-[#4485fd] cursor-pointer border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
           >
             Login <FaAnglesRight />

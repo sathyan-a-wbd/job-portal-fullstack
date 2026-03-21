@@ -7,15 +7,19 @@ import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import NavbarProfileDashboard from "./NavbarProfileDashboard";
 import Searchbar from "./Searchbar";
+import { useSelector } from "react-redux";
+
 const NavBar = ({ image }) => {
   const [notification, setNotification] = useState(10);
   const [inputFocus, setInputFocus] = useState(false);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
-  const [userStatus, setUserStatus] = useState(true);
-
+  const [userStatus, setUserStatus] = useState(false);
+  const isLogin = useSelector((state) => state.users.isLogin);
   return (
-    <section className="w-full sm:shadow roboto sm:bg-white  ">
+    <section
+      className={`w-full sm:shadow roboto sm:bg-white ${isLogin ? "hidden" : "block"} `}
+    >
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}
         <div className="flex items-center justify-between relative sm:hidden w-10">

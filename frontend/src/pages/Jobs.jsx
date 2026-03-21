@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const Jobs = ({ jobDetails }) => {
   const [searchParams] = useSearchParams();
   const selectedJob = useSelector((state) => state.jobs.selectedJob);
-  console.log(selectedJob);
+
   const isSelectedJob = !!selectedJob;
   const id = searchParams.get("jobidelmentrfid");
   return (

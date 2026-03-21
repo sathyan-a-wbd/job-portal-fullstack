@@ -30,6 +30,9 @@ body {
 .inter {
   font-family: "inter", sans-serif;
 }
+.poppins {
+  font-family: "Poppins", sans-serif;
+}
 .bea-blue {
   color: #bcd4e6;
   background: #bcd4e6;
@@ -96,4 +99,26 @@ CMYK 58, 37, 0, 7*/
 
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background: #bcd4e6; /* slate-500 */
+}
+
+.hover-btn {
+  overflow: hidden;
+  position: relative;
+  transition: all 0.4s ease-in-out;
+}
+.hover-btn::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -30%;
+  height: 100px;
+  width: 20px;
+  background: #ffffff59;
+  opacity: 3;
+  rotate: -20deg;
+  box-shadow: 2px 3px 30px white;
+  transition: all 0.4s ease-in-out;
+}
+.hover-btn:hover::after {
+  left: 130%;
 }
