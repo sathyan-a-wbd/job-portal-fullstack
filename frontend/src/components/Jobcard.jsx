@@ -7,7 +7,7 @@ import { MdBookmarkBorder } from "react-icons/md";
 
 import { LiaWalletSolid } from "react-icons/lia";
 import { useDispatch } from "react-redux";
-import { setSelectedJob } from "../features/jobs/jobSlice";
+import { setSelectedJob } from "../redux/jobs/jobSlice";
 
 const Jobcard = ({ jobDetails }) => {
   const locationUrl = useLocation();

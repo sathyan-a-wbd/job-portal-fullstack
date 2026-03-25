@@ -11,7 +11,7 @@ import { MdBookmarkAdded } from "react-icons/md";
 import { LiaWalletSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedJob } from "../features/jobs/jobSlice";
+import { setSelectedJob } from "../redux/jobs/jobSlice";
 
 const JobDetails = ({ jobDetails }) => {
   const [searchParams] = useSearchParams();
@@ -42,7 +42,7 @@ const JobDetails = ({ jobDetails }) => {
   }, [selectedJob]);
   return (
     <section
-      className={`fixed h-screen overflow-y-auto md:custom-scroll z-30 md:relative md:z-0 md:px-2 md:py-2 top-0 left-0 `}
+      className={`fixed h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:px-2 md:py-2 top-0 left-0 `}
     >
       {job && (
         <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">

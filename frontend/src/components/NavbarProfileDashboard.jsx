@@ -3,14 +3,14 @@ import { FaAnglesRight } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setIsLogin } from "../features/user/userSlice";
+import { setIsLogin } from "../redux/user/userSlice";
 
 const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
   const dispatch = useDispatch();
-
+  const token = localStorage.getItem("token");
   return (
     <ul className="flex flex-col w-full">
-      {!userStatus ?
+      {!token ?
         <div>
           <Link
             to={"/login"}
