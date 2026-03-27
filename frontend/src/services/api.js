@@ -24,13 +24,6 @@ export const DeleteUser = async (id) => {
   return res.data;
 };
 
-//Update User
-
-export const UpdateUser = async (id, userData) => {
-  const res = await API.put(`/users/${id}`, userData);
-  return res;
-};
-
 export const LoginUser = async (data) => {
   const res = await API.post("/users/login", data);
   return res.data.token;
@@ -39,6 +32,18 @@ export const LoginUser = async (data) => {
 export const GetProfile = async () => {
   const token = localStorage.getItem("token");
   const res = await API.get("/users/profile", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+//Update User
+
+export const UpdateUser = async (userData) => {
+  const token = localStorage.getItem("token");
+  const res = await API.put(`/users/profile`, userData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

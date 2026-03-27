@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaAnglesRight } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin } from "../redux/user/userSlice";
+import { GetProfile } from "../services/api";
 
-const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
+const NavbarProfileDashboard = ({ setMobileNav }) => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
+  const [userInfo, setUserInfo] = useState(null);
+
+  const { user, loading } = useSelector((state) => state.users);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await GetProfile();
+      setUserInfo(res);
+    };
+    fetchUser();
+  }, []);
   return (
     <ul className="flex flex-col w-full">
       {!token ?
@@ -39,8 +51,12 @@ const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
               className={"flex items-center justify-center"}
               to={"/profile-dashboard"}
             >
-              {image ?
-                <img src={image} alt="profile-img" loading="lazy" />
+              {userInfo?.profileImage ?
+                <img
+                  src={userInfo?.profileImage}
+                  alt="profile-img"
+                  loading="lazy"
+                />
               : <FaUserAlt
                   color="#4485fd"
                   className="text-7xl translate-y-2 "
@@ -49,9 +65,9 @@ const NavbarProfileDashboard = ({ userStatus, image, setMobileNav }) => {
             </Link>
           </div>
           <div className="">
-            <h2 className="text-lg">Name Initial</h2>
+            <h2 className="text-lg">{userInfo?.fname}</h2>
             <span className="text-sm text-gray-500 text-wrap max-w-80">
-              xyz-xxxssscfffff fffffffffffffffffffffffs
+              {userInfo?.educations[0].courseName}
             </span>
             <li
               onClick={() => {

@@ -5,8 +5,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./utils/ProtectedRoute";
 //Layouts
 import MainLayout from "./layouts/MainLayout";
@@ -19,10 +19,15 @@ import Dashboard from "./pages/Dashboard";
 import Notifications from "./pages/Notifications";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ProfileEdit from "./components/ProfileEdit";
+import { userThunk } from "./redux/user/userSlice";
 
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(userThunk());
+  }, [dispatch]);
   return (
     <Routes>
       {/* Main Layout (with Navbar) */}
@@ -34,6 +39,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile-edit"
+          element={
+            <ProtectedRoute>
+              <ProfileEdit />
             </ProtectedRoute>
           }
         />

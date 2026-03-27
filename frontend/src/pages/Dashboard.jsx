@@ -1,66 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { GetProfile } from "../services/api";
-import { FaUserAlt } from "react-icons/fa";
+
 import { IoIosCall } from "react-icons/io";
 import { MdCake, MdOutlineAlternateEmail } from "react-icons/md";
 import { TiLocation } from "react-icons/ti";
 import { FiEdit2 } from "react-icons/fi";
-import { CgGenderFemale, CgGenderMale } from "react-icons/cg";
-const Dashboard = ({ image }) => {
+
+import { Link } from "react-router-dom";
+const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-  // {
-  //     fname: "Sathyan",
-  //     mail: "sathyan.dev@gmail.com",
-  //     mobile: "9876543210",
-  //     location: "Chennai, Tamil Nadu",
-  //     dob: "15 Aug 2002",
 
-  //     // New fields
-  //     profileSummary:
-  //       "Frontend developer skilled in React.js, building responsive and user-friendly web applications. Passionate about learning backend technologies and becoming a full-stack developer.",
-
-  //     skills: ["HTML", "CSS", "JavaScript", "React.js", "Tailwind CSS", "Git"],
-
-  //     languages: ["English", "Tamil"],
-
-  //     // Career preferences (arrays as requested)
-  //     jobPrefrence: ["Full-Time", "Remote", "Frontend Developer"],
-  //     availabilty: "Immediate",
-  //     preferredLocation: ["Chennai", "Bangalore", "Remote"],
-
-  //     // Experience array
-  //     experience: [
-  //       {
-  //         role: "Frontend Developer Intern",
-  //         company: "Tech Solutions",
-  //         duration: ["Jan 2025", "Mar 2025"],
-  //         description:
-  //           "Worked on building responsive UI components using React and Tailwind CSS.",
-  //       },
-  //       {
-  //         role: "Freelance Web Developer",
-  //         company: "Self-employed",
-  //         duration: ["Jan 2025", "Mar 2025"],
-  //         description:
-  //           "Developed small business websites and optimized UI performance.",
-  //       },
-  //     ],
-
-  //     // Education array
-  //     educations: [
-  //       {
-  //         courseName: "B.Sc Computer Science",
-  //         collegeName: "Madras University",
-  //         duration: ["2022", "2025"],
-  //       },
-  //       {
-  //         courseName: "Higher Secondary",
-  //         collegeName: "ABC Higher Secondary School",
-  //         duration: ["2025", "2028"],
-  //       },
-  //     ],
-  //   }
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -87,21 +37,32 @@ const Dashboard = ({ image }) => {
     <section className="w-full px-6 justify-center roboto flex my-5 ">
       <div className="flex flex-col w-[600px] max-w-[600px]  justify-center gap-5">
         {/* name && profileimage */}
-        <div className="flex items-center w-full justify-between">
+        <div className="flex items-center w-full justify-between rounded-xl shadow-lg p-5">
           <h3 className="text-2xl tracking-widest text-gray-700 font-semibold">
             {user?.fname?.toUpperCase()}
           </h3>
-          <div
-            className={`w-15 h-15 min-h-10 min-w-10 overflow-hidden bg-gray-700 rounded-full  ring-3 ring-gray-700`}
-          >
-            <div className={"flex h-full items-center justify-center"}>
-              {image ?
-                <img src={image} alt="profile-img" loading="lazy" />
+          <div className="relative w-15 h-15 min-h-10 min-w-10">
+            {/* Image wrapper */}
+            <div className="w-full h-full bg-gray-700 rounded-full shadow-lg ring-3 ring-green-600 overflow-hidden flex items-center justify-center">
+              {user?.profileImage ?
+                <img
+                  src={user?.profileImage}
+                  alt="profile-img"
+                  className="w-full h-full object-cover"
+                />
               : <h1 className="text-3xl font-bold text-white">
                   {user?.fname?.toUpperCase().slice(0, 2)}
                 </h1>
               }
             </div>
+
+            {/* Edit button */}
+            <Link
+              to={"/profile-edit/?userEdit=profileImage"}
+              className="absolute bottom-0 -right-1 bg-[#4485fd] rounded-full w-6 h-6 flex items-center justify-center shadow-md"
+            >
+              <FiEdit2 color="white" size={14} />
+            </Link>
           </div>
         </div>
         {/* Contact details */}
@@ -109,7 +70,9 @@ const Dashboard = ({ image }) => {
           <div className="flex items-center justify-between">
             {/* editoption */}
             <h2 className="poppins font-medium">Basic details</h2>
-            <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            <Link className="" to={"/profile-edit/?userEdit=basicDetails"}>
+              <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            </Link>
           </div>
           <ul className="flex flex-col poppins gap-4">
             {/* details */}
@@ -140,7 +103,9 @@ const Dashboard = ({ image }) => {
           <div className="flex items-center justify-between">
             {/* editoption */}
             <h2 className="poppins font-medium">Career prefrences</h2>
-            <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            <Link to={"/profile-edit/?userEdit=careerPrefer"}>
+              <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            </Link>
           </div>
           <ul className="flex flex-col poppins gap-4">
             {/* details */}
@@ -172,7 +137,20 @@ const Dashboard = ({ image }) => {
           <div className="flex items-center justify-between">
             {/* editoption */}
             <h2 className="poppins font-medium">Education</h2>
-            <button className="poppins text-sm text-[#4485fd]">Add</button>
+            <div className="flex items-center gap-4">
+              <Link
+                to={"/profile-edit/?userEdit=education"}
+                className="poppins text-sm text-[#4485fd] cursor-pointer"
+              >
+                Add
+              </Link>
+              <Link
+                to={"/profile-edit/?userEdit=educationEdit"}
+                className="poppins text-sm text-[#4485fd] cursor-pointer"
+              >
+                Edit
+              </Link>
+            </div>
           </div>
           <ul className="flex flex-col poppins gap-4">
             {/* details */}
@@ -185,10 +163,6 @@ const Dashboard = ({ image }) => {
                   <h3 className="text-sm font-medium">
                     {education?.courseName}
                   </h3>
-                  <FiEdit2
-                    size={20}
-                    className=" cursor-pointer text-gray-700"
-                  />
                 </div>
                 <span className="text-sm poppins">
                   {education?.collegeName}
@@ -196,6 +170,7 @@ const Dashboard = ({ image }) => {
                 <span className="text-sm poppins">
                   {education?.duration.join(" - ")}
                 </span>
+                <hr className="border-t border-gray-300 my-4" />
               </li>
             ))}
           </ul>
@@ -204,7 +179,9 @@ const Dashboard = ({ image }) => {
           <div className="flex items-center justify-between">
             {/* editoption */}
             <h2 className="poppins font-medium">Profile summary</h2>
-            <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            <Link to={"/profile-edit/?userEdit=summary"}>
+              <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            </Link>
           </div>
           <ul className="flex flex-col poppins gap-4">
             {/* details */}
@@ -217,7 +194,9 @@ const Dashboard = ({ image }) => {
           <div className="flex items-center justify-between">
             {/* editoption */}
             <h2 className="poppins font-medium">Key skills</h2>
-            <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            <Link to={"/profile-edit/?userEdit=skills"}>
+              <FiEdit2 size={20} className=" cursor-pointer text-gray-700" />
+            </Link>
           </div>
           <div className="flex flex-wrap gap-2">
             {/* details */}
@@ -235,7 +214,20 @@ const Dashboard = ({ image }) => {
           <div className="flex items-center justify-between">
             {/* editoption */}
             <h2 className="poppins font-medium">Languages</h2>
-            <button className="poppins text-sm text-[#4485fd]">Add</button>
+            <div className="flex items-center gap-4" to={"/profile-edit"}>
+              <Link
+                to={"/profile-edit/?userEdit=languages"}
+                className="poppins text-sm text-[#4485fd] cursor-pointer"
+              >
+                Add
+              </Link>
+              <Link
+                to={"/profile-edit/?userEdit=languagesEdit"}
+                className="poppins text-sm text-[#4485fd] cursor-pointer"
+              >
+                Edit
+              </Link>
+            </div>
           </div>
           <ul className="flex flex-col poppins gap-4">
             {/* details */}
@@ -246,10 +238,6 @@ const Dashboard = ({ image }) => {
               >
                 <div className="flex justify-between items-center">
                   <h3 className="text-sm font-medium">{language}</h3>
-                  <FiEdit2
-                    size={20}
-                    className=" cursor-pointer text-gray-700"
-                  />
                 </div>
               </li>
             ))}
@@ -259,7 +247,20 @@ const Dashboard = ({ image }) => {
           <div className="flex items-center justify-between">
             {/* editoption */}
             <h2 className="poppins font-medium">Experience</h2>
-            <button className="poppins text-sm text-[#4485fd]">Add</button>
+            <div className="flex items-center gap-4" to={"/profile-edit"}>
+              <Link
+                to={"/profile-edit/?userEdit=exp"}
+                className="poppins text-sm text-[#4485fd] cursor-pointer"
+              >
+                Add
+              </Link>
+              <Link
+                className="poppins text-sm text-[#4485fd] cursor-pointer"
+                to={"/profile-edit/?userEdit=expEdit"}
+              >
+                Edit
+              </Link>
+            </div>
           </div>
           <ul className="flex flex-col poppins gap-4">
             {/* details */}
@@ -272,10 +273,6 @@ const Dashboard = ({ image }) => {
                   <h3 className="text-sm text-gray-800 font-medium">
                     {exp?.role}
                   </h3>
-                  <FiEdit2
-                    size={20}
-                    className=" cursor-pointer text-gray-700"
-                  />
                 </div>
                 <span className="text-sm poppins">{exp?.company}</span>
 

@@ -97,9 +97,11 @@ router.get("/profile", authMiddleware, async (req, res) => {
 // ✅ Update Profile (partial update)
 router.put("/profile", authMiddleware, async (req, res) => {
   try {
+    console.log("BODY:", req.body); // 👈 add this
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
       { $set: req.body },
+
       { new: true },
     ).select("-password");
 
