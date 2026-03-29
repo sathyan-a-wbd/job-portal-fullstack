@@ -4,6 +4,8 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadResume");
+const { updateResume, deleteResume } = require("../controllers/userController");
 
 // ✅ Register
 router.post("/register", async (req, res) => {
@@ -110,5 +112,6 @@ router.put("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Update failed" });
   }
 });
-
+router.put("/resume", authMiddleware, upload.single("resume"), updateResume);
+router.delete("/resume", authMiddleware, deleteResume);
 module.exports = router;

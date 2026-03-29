@@ -1,21 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { GetProfile } from "../../services/api";
 
-export const userThunk = createAsyncThunk(
-  "users/fetchProfile",
-  async (_, thunkApi) => {
-    try {
-      const res = await GetProfile();
-      return res;
-    } catch (error) {
-      return thunkApi.rejectWithValue(error.response?.data || "Error");
-    }
-  },
-);
-
 const initialState = {
-  user: null,
-  loading: false,
+  currentUser: null,
+  loading: true,
   isLogin: false,
   errors: null,
   userEdit: localStorage.getItem("userEdit") || "",
@@ -30,7 +18,12 @@ const userSlice = createSlice({
     setErrors: (state, action) => {
       state.errors = action.payload;
     },
-
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setUserRedux: (state, action) => {
+      state.currentUser = action.payload;
+    },
     setUserEdit: (state, action) => {
       state.userEdit = action.payload;
       localStorage.setItem("userEdit", action.payload);
@@ -39,22 +32,13 @@ const userSlice = createSlice({
       state.user = null;
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(userThunk.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(userThunk.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-      })
-      .addCase(userThunk.rejected, (state, action) => {
-        state.loading = false;
-        state.errors = action.payload;
-      });
-  },
 });
-
-export const { setIsLogin, setErrors, setUserId, setUserEdit, logout } =
-  userSlice.actions;
+export const {
+  setIsLogin,
+  setErrors,
+  setUserRedux,
+  setUserId,
+  setUserEdit,
+  setLoading,
+} = userSlice.actions;
 export default userSlice.reducer;

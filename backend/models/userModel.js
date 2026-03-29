@@ -91,6 +91,22 @@ const userSchema = new Schema(
       type: companySchema,
       default: null,
     },
+    resume: {
+      type: String,
+      default: "",
+    },
+    aiSummaryCount: {
+      type: Number,
+      default: 0,
+    },
+    lastSummaryDate: {
+      type: Date,
+      default: null,
+    },
+    resumeName: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true },
 );

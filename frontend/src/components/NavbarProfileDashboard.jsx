@@ -1,29 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { FaAnglesRight } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsLogin } from "../redux/user/userSlice";
-import { GetProfile } from "../services/api";
-
+import { setIsLogin, setLoading } from "../redux/user/userSlice";
+import { validateUser } from "../services/api";
 const NavbarProfileDashboard = ({ setMobileNav }) => {
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
-  const [userInfo, setUserInfo] = useState(null);
-
-  const { user, loading } = useSelector((state) => state.users);
-
+  const currentUser = useSelector((state) => state.users.currentUser);
+  const navigate = useNavigate();
+  const [isValid, setIsValid] = useState(false);
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await GetProfile();
-      setUserInfo(res);
+    const userAuth = async () => {
+      try {
+        const res = await validateUser();
+        if (res) {
+          setIsValid(true);
+        } else {
+          setIsValid(false);
+        }
+      } catch (error) {
+        setIsValid(false);
+      } finally {
+        dispatch(setLoading(false));
+      }
     };
-    fetchUser();
+
+    userAuth();
   }, []);
+
   return (
     <ul className="flex flex-col w-full">
-      {!token ?
-        <div>
+      {!isValid ?
+        <div className="shadow-lg rounded-2xl bg-white px-10 py-4">
           <Link
             to={"/login"}
             onClick={() => dispatch(setIsLogin(true))}
@@ -51,9 +64,9 @@ const NavbarProfileDashboard = ({ setMobileNav }) => {
               className={"flex items-center justify-center"}
               to={"/profile-dashboard"}
             >
-              {userInfo?.profileImage ?
+              {currentUser?.profileImage ?
                 <img
-                  src={userInfo?.profileImage}
+                  src={currentUser?.profileImage}
                   alt="profile-img"
                   loading="lazy"
                 />
@@ -65,9 +78,9 @@ const NavbarProfileDashboard = ({ setMobileNav }) => {
             </Link>
           </div>
           <div className="">
-            <h2 className="text-lg">{userInfo?.fname}</h2>
+            <h2 className="text-lg">{currentUser?.fname}</h2>
             <span className="text-sm text-gray-500 text-wrap max-w-80">
-              {userInfo?.educations[0].courseName}
+              {currentUser?.educations[0].courseName}
             </span>
             <li
               onClick={() => {
@@ -81,6 +94,12 @@ const NavbarProfileDashboard = ({ setMobileNav }) => {
                 View & Update{" "}
               </Link>
             </li>
+            <button
+              onClick={handleLogOut}
+              className="text-sm underline cursor-pointer text-[#647daa]"
+            >
+              Log out
+            </button>
           </div>
         </div>
       }

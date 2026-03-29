@@ -20,47 +20,65 @@ import Notifications from "./pages/Notifications";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProfileEdit from "./components/ProfileEdit";
-import { userThunk } from "./redux/user/userSlice";
+import GlobalLoader from "./components/GlobalLoader";
+import { setLoading, setUserRedux } from "./redux/user/userSlice";
+import { GetProfile } from "./services/api";
 
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(userThunk());
-  }, [dispatch]);
+    const fetchProfile = async () => {
+      try {
+        dispatch(setLoading(true));
+        const user = await GetProfile();
+
+        dispatch(setUserRedux(user));
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    fetchProfile();
+  }, []);
   return (
-    <Routes>
-      {/* Main Layout (with Navbar) */}
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home jobDetails={jobDetails} />} />
-        <Route path="/jobs-list" element={<Jobs jobDetails={jobDetails} />} />
-        <Route
-          path="/profile-dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile-edit"
-          element={
-            <ProtectedRoute>
-              <ProfileEdit />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/notifications" element={<Notifications />} />
-      </Route>
+    <>
+      <GlobalLoader />
+      <Routes>
+        {/* Main Layout (with Navbar) */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home jobDetails={jobDetails} />} />
+          <Route path="/jobs-list" element={<Jobs jobDetails={jobDetails} />} />
+          <Route
+            path="/profile-dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile-edit"
+            element={
+              <ProtectedRoute>
+                <ProfileEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/notifications" element={<Notifications />} />
+        </Route>
 
-      {/* Auth Layout (NO Navbar) */}
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Route>
+        {/* Auth Layout (NO Navbar) */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
   );
 }

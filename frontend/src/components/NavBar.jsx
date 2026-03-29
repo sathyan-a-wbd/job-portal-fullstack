@@ -9,12 +9,11 @@ import NavbarProfileDashboard from "./NavbarProfileDashboard";
 import Searchbar from "./Searchbar";
 import { useSelector } from "react-redux";
 
-const NavBar = ({ image }) => {
+const NavBar = () => {
   const [notification, setNotification] = useState(10);
-  const [inputFocus, setInputFocus] = useState(false);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
-  const [userStatus, setUserStatus] = useState(false);
+
   const isLogin = useSelector((state) => state.users.isLogin);
   return (
     <section
@@ -35,17 +34,13 @@ const NavBar = ({ image }) => {
 
         {/* Mobile-navbar */}
         <nav
-          className={`sm:order-2 text-gray-800 sm:hidden  fixed w-[80%] bg-[#f4f9fd] border border-gray-200 transition-transform duration-500 ease-in-out rounded-r-3xl shadow-2xl backdrop:blur-3xl h-screen top-0 left-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
+          className={`sm:order-2 text-gray-800 sm:hidden poppins fixed w-[80%] bg-[#f4f9fd] border border-gray-200 transition-transform duration-500 ease-in-out rounded-r-3xl shadow-2xl backdrop:blur-3xl h-screen top-0 left-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
         >
           <ul className="px-3 py-20 h-screen flex flex-col gap-5 items-center tracking-wider">
             <h3 className="w-full text-left px-1 text-sm tracking-widest text-[#4485fd]">
               Jobist<span className="text-red-400 text-sm">.com</span>
             </h3>
-            <NavbarProfileDashboard
-              userStatus={userStatus}
-              image={image}
-              setMobileNav={setMobileNav}
-            />
+            <NavbarProfileDashboard setMobileNav={setMobileNav} />
             <span className="w-full h-0.5  rounded-sm bg-[#4485fd31]">
               {""}
             </span>
@@ -117,12 +112,9 @@ const NavBar = ({ image }) => {
                 <div
                   onMouseEnter={() => setUserHover(true)}
                   onMouseLeave={() => setUserHover(false)}
-                  className="absolute  w-fit whitespace-nowrap top-6 right-0 bg-[#f8fcff] backdrop:blur rounded-lg border border-white/40 px-4 py-3"
+                  className="absolute w-fit whitespace-nowrap top-6 right-0  backdrop:blur  border-white/40 px-4 py-3"
                 >
-                  <NavbarProfileDashboard
-                    userStatus={userStatus}
-                    image={image}
-                  />
+                  <NavbarProfileDashboard />
                 </div>
               )}
             </div>

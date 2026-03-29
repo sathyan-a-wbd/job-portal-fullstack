@@ -1,41 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { GetProfile } from "../services/api";
-
+import { deleteResumeAPI, GetProfile, updateResumeAPI } from "../services/api";
+import { FiFileText } from "react-icons/fi";
 import { IoIosCall } from "react-icons/io";
 import { MdCake, MdOutlineAlternateEmail } from "react-icons/md";
 import { TiLocation } from "react-icons/ti";
 import { FiEdit2 } from "react-icons/fi";
-
+import { LuFolderPlus } from "react-icons/lu";
 import { Link } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../redux/user/userSlice";
 const Dashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
-
+  const currentUser = useSelector((state) => state.users.currentUser);
+  const [user, setUser] = useState(currentUser);
+  const [file, setFile] = useState(null);
+  const [updateMenu, setUpdateMenu] = useState(false);
+  const dispatch = useDispatch();
+  const showUploadUI = updateMenu || !user?.resume;
+  if (!user && currentUser) {
+    setUser(currentUser);
+  }
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const user = await GetProfile();
-        setUser(user);
-        if (user) {
-          setLoading(false);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchProfile();
+    dispatch(setLoading(false));
   }, []);
+  const handleUpload = async () => {
+    try {
+      const data = await updateResumeAPI(file);
 
-  if (loading)
-    return (
-      <section className="w-full absolute left-0 top-0 h-screen flex items-center justify-center">
-        <p>Loading...</p>
-      </section>
-    );
+      setUser((prev) => ({
+        ...prev,
+        resume: data.resume,
+        resumeName: data.resumeName,
+      }));
+
+      setUpdateMenu(false); // close upload UI
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleDelete = async () => {
+    try {
+      await deleteResumeAPI();
+
+      // Update UI instantly
+      setUser((prev) => ({
+        ...prev,
+        resume: "",
+        resumeName: "",
+      }));
+
+      setUpdateMenu(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <section className="w-full px-6 justify-center roboto flex my-5 ">
-      <div className="flex flex-col w-[600px] max-w-[600px]  justify-center gap-5">
+      <div className="flex flex-col w-150 max-w-150  justify-center gap-5">
         {/* name && profileimage */}
         <div className="flex items-center w-full justify-between rounded-xl shadow-lg p-5">
           <h3 className="text-2xl tracking-widest text-gray-700 font-semibold">
@@ -284,6 +306,97 @@ const Dashboard = () => {
               </li>
             ))}
           </ul>
+        </div>
+        <div className="flex flex-col gap-4 poppins justify-between rounded-xl shadow-lg p-5">
+          <div className="flex items-center justify-between">
+            {/* editoption */}
+            <h2 className="poppins font-medium">Resume</h2>{" "}
+          </div>
+          <div className="p-4">
+            <div className="flex shadow-lg items-center justify-center p-5 border border-white/20 bg-[#badffcb4] rounded-2xl">
+              <div className="w-full">
+                {
+                  showUploadUI ?
+                    //  Upload UI
+                    <div className="w-full relative h-full py-5 rounded-lg border-dashed border-2 border-gray-400 flex gap-2 flex-col items-center justify-center">
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        id="profileUpload"
+                        className="hidden"
+                        onChange={(e) => {
+                          const selectedFile = e.target.files[0];
+                          setFile(selectedFile);
+
+                          // show name immediately
+                          setUser((prev) => ({
+                            ...prev,
+                            resumeName: selectedFile.name,
+                          }));
+                        }}
+                      />
+
+                      <label
+                        htmlFor="profileUpload"
+                        className="w-full h-full text-[#4485fd] flex flex-col gap-2 items-center justify-center poppins cursor-pointer"
+                      >
+                        <div className="flex flex-col items-center justify-center rounded-full w-9 h-9 bg-white">
+                          <LuFolderPlus size={20} />
+                        </div>
+                        <div>
+                          <span className="text-white">{user?.resumeName}</span>
+                        </div>
+                        {user?.resume ? "Update Resume" : "Upload Resume"}
+                      </label>
+                    </div>
+                    //  Resume display UI
+                  : <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center rounded-full w-8 h-8 bg-white">
+                        <FiFileText size={15} />
+                      </div>
+
+                      <div className="flex flex-col">
+                        <a
+                          href={user?.resume}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-sm poppins"
+                        >
+                          {user.resumeName || "Upload your resume"}
+                        </a>
+
+                        <span className="text-xs poppins">Uploaded</span>
+                      </div>
+                    </div>
+
+                }
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between px-20 py-5">
+              <button
+                onClick={handleDelete}
+                className="border px-6 py-2 cursor-pointer rounded-full text-[#4485fd] hover:bg-gray-200 border-[#4485fd]"
+              >
+                Delete
+              </button>
+
+              {showUploadUI ?
+                <button
+                  onClick={handleUpload}
+                  className="bg-[#4485fd]  cursor-pointer px-6 py-2 rounded-full text-white"
+                >
+                  Save
+                </button>
+              : <button
+                  onClick={() => setUpdateMenu(true)}
+                  className="bg-[#4485fd]  cursor-pointer px-6 py-2 rounded-full text-white"
+                >
+                  Update
+                </button>
+              }
+            </div>
+          </div>
         </div>
       </div>
     </section>
