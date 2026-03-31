@@ -21,36 +21,38 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProfileEdit from "./components/ProfileEdit";
 import GlobalLoader from "./components/GlobalLoader";
-import { setLoading, setUserRedux } from "./redux/user/userSlice";
-import { GetProfile } from "./services/api";
+
+import { getProfile } from "./redux/user/authSlice";
 
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchProfile = async () => {
+    async function fetchProfile() {
       try {
-        dispatch(setLoading(true));
-        const user = await GetProfile();
-
-        dispatch(setUserRedux(user));
+        await dispatch(getProfile()).unwrap();
       } catch (err) {
-        console.log(err);
-      } finally {
-        dispatch(setLoading(false));
+        console.log("Error fetching profile:", err);
       }
-    };
-
+    }
     fetchProfile();
-  }, []);
+  }, [dispatch]);
+
   return (
     <>
       <GlobalLoader />
       <Routes>
-        {/* Main Layout (with Navbar) */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home jobDetails={jobDetails} />} />
           <Route path="/jobs-list" element={<Jobs jobDetails={jobDetails} />} />
+
+          <Route path="/notifications" element={<Notifications />} />
+        </Route>
+
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/profile-dashboard"
             element={
@@ -67,13 +69,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/notifications" element={<Notifications />} />
-        </Route>
-
-        {/* Auth Layout (NO Navbar) */}
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
         </Route>
 
         {/* Fallback */}

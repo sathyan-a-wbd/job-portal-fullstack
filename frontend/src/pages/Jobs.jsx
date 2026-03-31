@@ -13,7 +13,7 @@ const Jobs = ({ jobDetails }) => {
     <section className="grid grid-cols-1 items-center w-full gap-10 px-0 md:px-10 ">
       <div className="flex flex-col md:flex-row md:ring-1 md:ring-[#bcd4e6]/30 sm:py-5 rounded-xl ">
         <div
-          className={`md:h-screen ${id ? "sc" : "block"} md:block md:overflow-y-scroll custom-scroll w-full md:w-[45%] px-4 md:px-8 md:border-r-2  md:border-[#bcd4e6]/30 md:shadow-lg rounded-sm py-5`}
+          className={`md:h-screen ${id ? "sc" : "block"} md:block md:overflow-y-scroll custom-scroll w-full md:w-[45%] px-4 md:px-8 md:border-r-2  md:border-[#bcd4e6]/30 md:shadow-lg rounded-sm`}
         >
           <h3 className="my-5 font-semibold text-lg text-gray-700">
             Jobs for you

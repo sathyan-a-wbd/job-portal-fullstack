@@ -9,13 +9,25 @@ export const registerSchema = yup.object({
     .matches(/^[0-9]{10}$/, "Mobile must be 10 digits"),
   password: yup
     .string()
-
-    .required("passward required")
-    .min(6, "Password legnth minimum 6 chars"),
+    .required("Password is required")
+    .min(6, "Password length minimum 6 chars"),
   confirmPassword: yup
     .string()
-
     .required("Confirm password is required")
-    .oneOf([yup.ref("password")], "Password must match"),
+    .oneOf([yup.ref("password")], "Passwords must match"),
   userType: yup.string().required("Select user type"),
+
+  // Conditional Validation for Recruiters
+  companyName: yup.string().when("userType", {
+    is: "employer",
+    then: (schema) =>
+      schema.required("Company name is required for recruiters"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  companyLocation: yup.string().when("userType", {
+    is: "employer",
+    then: (schema) => schema.required("Location is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  website: yup.string().url("Enter a valid URL (https://...)").notRequired(),
 });

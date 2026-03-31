@@ -3,35 +3,30 @@ import { FaAnglesRight } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsLogin, setLoading } from "../redux/user/userSlice";
-import { validateUser } from "../services/api";
-const NavbarProfileDashboard = ({ setMobileNav }) => {
+
+import { logout, setCurrenUser } from "../redux/user/authSlice";
+const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.users.currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
   const navigate = useNavigate();
   const [isValid, setIsValid] = useState(false);
   const handleLogOut = () => {
-    localStorage.removeItem("token");
+    dispatch(logout());
+    dispatch(setCurrenUser());
     navigate("/");
   };
+  const token = useSelector((state) => state.auth.token);
   useEffect(() => {
-    const userAuth = async () => {
-      try {
-        const res = await validateUser();
-        if (res) {
-          setIsValid(true);
-        } else {
-          setIsValid(false);
-        }
-      } catch (error) {
+    const validate = async () => {
+      if (token) {
+        setIsValid(true);
+      } else {
         setIsValid(false);
-      } finally {
-        dispatch(setLoading(false));
       }
     };
 
-    userAuth();
-  }, []);
+    validate();
+  }, [token]);
 
   return (
     <ul className="flex flex-col w-full">
@@ -39,13 +34,14 @@ const NavbarProfileDashboard = ({ setMobileNav }) => {
         <div className="shadow-lg rounded-2xl bg-white px-10 py-4">
           <Link
             to={"/login"}
-            onClick={() => dispatch(setIsLogin(true))}
+            onClick={() => setVisibleNav(true)}
             className="text-sm text-[#4485fd] cursor-pointer border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
           >
             Login <FaAnglesRight />
           </Link>
           <Link
             to={"/register"}
+            onClick={() => setVisibleNav(true)}
             className="text-sm text-[#4485fd] cursor-pointer  border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
           >
             SignUp <FaAnglesRight />
@@ -80,7 +76,7 @@ const NavbarProfileDashboard = ({ setMobileNav }) => {
           <div className="">
             <h2 className="text-lg">{currentUser?.fname}</h2>
             <span className="text-sm text-gray-500 text-wrap max-w-80">
-              {currentUser?.educations[0].courseName}
+              {currentUser?.educations[0]?.courseName}
             </span>
             <li
               onClick={() => {

@@ -68,7 +68,7 @@ Education: ${education || "No education"}
         },
       },
     );
-
+    console.log("KEY:", process.env.OPEN_ROUTER_KEY);
     let summary = response.data.choices[0].message.content;
     summary = summary.split("\n\n")[0];
     //  Update usage

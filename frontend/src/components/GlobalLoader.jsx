@@ -2,7 +2,7 @@ import React from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 const GlobalLoader = () => {
-  const loading = useSelector((state) => state.users.loading);
+  const loading = useSelector((state) => state.auth.loading);
   if (!loading) return null;
   return (
     <div className="inset-0 z-50 bg-black/20 fixed  flex flex-col items-center justify-center">

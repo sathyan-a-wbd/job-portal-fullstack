@@ -76,7 +76,7 @@ const userSchema = new Schema(
     jobPrefrence: { type: [String], default: [] },
     availabilty: {
       type: String,
-      enum: ["Immediate", "15 Days", "1 Month", "2 Months", "3 Months", ""],
+      enum: ["Immediate", "15 Days", "1 Month", "2 Month", "3 Month", ""],
       default: "",
     },
 

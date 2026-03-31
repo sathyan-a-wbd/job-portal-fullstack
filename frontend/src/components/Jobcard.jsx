@@ -22,7 +22,7 @@ const Jobcard = ({ jobDetails }) => {
           replace
           state={{ fromList: true }}
           key={job.id}
-          className=" sm:bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-xl sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden"
+          className=" sm:bg-[#ffff] bg-[#ffffffe5] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-xl sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden"
         >
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between py-2">

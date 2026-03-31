@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { GetProfile } from "../../services/api";
 
 const initialState = {
@@ -8,6 +8,11 @@ const initialState = {
   errors: null,
   userEdit: localStorage.getItem("userEdit") || "",
 };
+export const fetchUserData = createAsyncThunk("app/fetchUserData", async () => {
+  const response = await GetProfile();
+
+  return response;
+});
 const userSlice = createSlice({
   name: "users",
   initialState,
@@ -31,6 +36,20 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentUser = action.payload;
+      })
+      .addCase(fetchUserData.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.error.message;
+      });
   },
 });
 export const {

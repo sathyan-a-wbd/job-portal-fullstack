@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { LoginUser } from "../services/api";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../features/validations/loginSchema";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../redux/user/userSlice";
+import { getProfile, loginUser } from "../redux/user/authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispacth = useDispatch();
-  useEffect(() => {
-    dispacth(setLoading(false));
-  }, []);
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -21,10 +20,12 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await LoginUser(data);
+      await dispatch(loginUser(data)).unwrap();
 
-      localStorage.setItem("token", res);
+      await dispatch(getProfile()).unwrap();
+
       alert("Logged in successfully");
+
       navigate("/profile-dashboard", { replace: true });
     } catch (err) {
       console.log("Login Error:", err);
