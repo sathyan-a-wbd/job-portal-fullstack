@@ -1,5 +1,5 @@
 const axios = require("axios");
-const User = require("../models/userModel"); //  import user model
+const { User } = require("../models/userModel"); //  import user model
 require("dotenv").config();
 
 exports.generateSummary = async (req, res) => {
