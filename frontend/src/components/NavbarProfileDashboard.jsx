@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaAnglesRight } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,39 +9,28 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const navigate = useNavigate();
-  const [isValid, setIsValid] = useState(false);
+  // const [isValid, setIsValid] = useState(false);
   const handleLogOut = () => {
     dispatch(logout());
     dispatch(setCurrenUser());
     navigate("/");
   };
   const token = useSelector((state) => state.auth.token);
-  useEffect(() => {
-    const validate = async () => {
-      if (token) {
-        setIsValid(true);
-      } else {
-        setIsValid(false);
-      }
-    };
-
-    validate();
-  }, [token]);
 
   return (
-    <ul className="flex flex-col w-full">
-      {!isValid ?
+    <div className="flex flex-col w-full">
+      {!token ?
         <div className="shadow-lg rounded-2xl bg-white px-10 py-4">
           <Link
             to={"/login"}
-            onClick={() => setVisibleNav(true)}
+            onClick={() => setMobileNav && setMobileNav(false)}
             className="text-sm text-[#4485fd] cursor-pointer border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
           >
             Login <FaAnglesRight />
           </Link>
           <Link
             to={"/register"}
-            onClick={() => setVisibleNav(true)}
+            onClick={() => setMobileNav && setMobileNav(false)}
             className="text-sm text-[#4485fd] cursor-pointer  border-b-[#6ca0dc] px-2 py-2 w-full rounded-lg flex items-center justify-between"
           >
             SignUp <FaAnglesRight />
@@ -54,9 +43,6 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
             className={`w-20 h-20 min-h-20 min-w-20 overflow-hidden bg-[#6ca0dc2f] rounded-full  ring-3 ring-green-500`}
           >
             <Link
-              onClick={() => {
-                setMobileNav(false);
-              }}
               className={"flex items-center justify-center"}
               to={"/profile-dashboard"}
             >
@@ -89,6 +75,7 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
               </Link>
             </li>
             <button
+              type="button"
               onClick={handleLogOut}
               className="text-sm underline cursor-pointer text-[#647daa]"
             >
@@ -97,7 +84,7 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
           </div>
         </div>
       }
-    </ul>
+    </div>
   );
 };
 

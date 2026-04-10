@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SiGooglegemini } from "react-icons/si";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
@@ -12,6 +12,7 @@ import {
 } from "../redux/user/authSlice";
 
 const ProfileEdit = () => {
+  const location = useLocation();
   const params = new URLSearchParams(location.search);
   const userEdit = params.get("userEdit");
 

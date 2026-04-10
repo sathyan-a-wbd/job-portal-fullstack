@@ -21,7 +21,7 @@ const JobDetails = () => {
   const userType = currentUser?.userType;
   const jobId = searchParams.get("job_id");
   const dispatch = useDispatch();
-  const job = jobs.find((j) => j._id.toString() === jobId);
+  const job = jobs.find((j) => j._id.toString() === jobId) || jobs[0];
   const selectedJob = useSelector((state) => state.jobs.selectedJob);
 
   useEffect(() => {

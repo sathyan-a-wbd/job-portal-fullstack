@@ -176,7 +176,10 @@ const EmployerRegister = () => {
             />
           </div>
 
-          <button className="bg-[#6ca0dc] hover:opacity-90 w-full py-2 my-2 text-white rounded-sm transition-all">
+          <button
+            type="submit"
+            className="bg-[#6ca0dc] hover:opacity-90 w-full py-2 my-2 text-white rounded-sm transition-all"
+          >
             Register Employer
           </button>
 

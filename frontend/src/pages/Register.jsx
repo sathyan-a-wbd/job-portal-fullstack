@@ -1,14 +1,14 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../features/validations/registerSchema";
-import { CreateUser } from "../services/api";
 import { createUser } from "../redux/user/authSlice";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
 const Register = () => {
+  const location = useLocation();
   const params = new URLSearchParams(location.search);
   const userType = params.get("userType");
   const {
@@ -31,7 +31,7 @@ const Register = () => {
         toast.error(res.payload?.message || "Register failed");
       }
     } catch (error) {
-      toast.error("Register failed : Plase try again", error);
+      toast.error("Register failed : Please try again");
     }
   };
 
@@ -74,7 +74,7 @@ const Register = () => {
             <p className="text-red-700 text-xs">{errors.mail?.message}</p>
           </div>
 
-          {/* 3. MOBILE FIELD (Added Back) */}
+          {/* 3. MOBILE FIELD */}
           <div className="input-field w-full flex flex-col gap-1">
             <label className="text-gray-500 text-sm font-medium">
               Enter mobile
@@ -87,24 +87,6 @@ const Register = () => {
             />
             <p className="text-red-700 text-xs">{errors.mobile?.message}</p>
           </div>
-
-          {/* 4. User Type */}
-          {/* <div className="input-field w-full flex flex-col gap-1">
-            <label className="text-gray-500 text-sm font-medium">
-              User type
-            </label>
-            <select
-              {...register("userType")}
-              className="px-3 text-gray-600 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm"
-            >
-              <option value="">Select user</option>
-              <option value="jobseeker">Job seeker</option>
-              <option value="employer">Recruiter</option>
-            </select>
-            <p className="text-red-700 text-xs">{errors.userType?.message}</p>
-          </div> */}
-
-          {/* Dynamic Recruiter Fields */}
 
           {/* 5. Password */}
           <div className="input-field w-full flex flex-col gap-1">
@@ -135,6 +117,7 @@ const Register = () => {
               {errors.confirmPassword?.message}
             </p>
           </div>
+
           {userType === "employer" && (
             <div className="w-full flex flex-col gap-2 mt-2 p-3 bg-gray-50 rounded-md border border-dashed border-[#bcd4e6]">
               <h2 className="text-sm font-bold text-gray-600 mb-1">

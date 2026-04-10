@@ -25,7 +25,7 @@ const JobseekerDashboard = () => {
 
     try {
       await dispatch(uploadResume(file)).unwrap();
-
+      toast.success("Resume uploaded successfully");
       setUpdateMenu(false);
       setFile(null);
     } catch (err) {
@@ -365,6 +365,7 @@ const JobseekerDashboard = () => {
 
             <div className="flex items-center justify-between px-20 py-5">
               <button
+                type="button"
                 onClick={handleDelete}
                 className="border px-6 py-2 cursor-pointer rounded-full text-[#4485fd] hover:bg-gray-200 border-[#4485fd]"
               >
@@ -373,12 +374,14 @@ const JobseekerDashboard = () => {
 
               {showUploadUI ?
                 <button
+                  type="button"
                   onClick={handleUpload}
                   className="bg-[#4485fd]  cursor-pointer px-6 py-2 rounded-full text-white"
                 >
                   Save
                 </button>
               : <button
+                  type="button"
                   onClick={() => setUpdateMenu(true)}
                   className="bg-[#4485fd]  cursor-pointer px-6 py-2 rounded-full text-white"
                 >

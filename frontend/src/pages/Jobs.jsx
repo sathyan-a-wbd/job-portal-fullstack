@@ -21,8 +21,8 @@ const Jobs = () => {
   const [searchParams] = useSearchParams();
   const { jobs = [] } = useSelector((state) => state.jobs);
   const selectedJob = useSelector((state) => state.jobs.selectedJob);
-
-  const isSelectedJob = !!selectedJob;
+  const displayJob = selectedJob || jobs[0];
+  const isSelectedJob = !!(selectedJob || jobs[0]);
   const id = searchParams.get("job_id");
   return (
     <section className="grid grid-cols-1 items-center w-full gap-10 px-0 md:px-10 ">
@@ -39,10 +39,11 @@ const Jobs = () => {
             ))}
           </div>
         </div>
+
         <div
-          className={`${isSelectedJob ? "block" : "hidden"} w-full md:w-[55%]  md:block py-1 px-2`}
+          className={`${selectedJob ? "block" : "hidden"} w-full md:w-[55%] md:block py-1 px-2`}
         >
-          <JobDetails jobDetails={jobs} />
+          <JobDetails jobDetails={jobs} defaultJob={displayJob} />
         </div>
       </div>
     </section>

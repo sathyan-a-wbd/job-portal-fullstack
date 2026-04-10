@@ -16,7 +16,7 @@ const SeekNav = () => {
 
   return (
     <section
-      className={`w-full sm:shadow roboto sm:bg-white ${visibleNav ? "hidden" : "block"} `}
+   className={`w-full sm:shadow roboto sm:bg-white`}
     >
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}

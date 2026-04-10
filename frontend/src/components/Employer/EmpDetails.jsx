@@ -38,7 +38,7 @@ const EmpDetails = () => {
         await dispatch(getMyJobs()).unwrap();
         toast.success("Job Deleted");
       } catch (err) {
-        toast.error("Failed to delete job",err);
+        toast.error("Failed to delete job", err);
       }
     }
   };
@@ -172,9 +172,6 @@ const EmpDetails = () => {
                   <Jobcard jobDetails={job} />
                 </div>
               ))}
-              <div className=" w-full top-0 flex flex-col items-center justify-center">
-                <JobDetails jobDetails={jobs} />
-              </div>
             </div>
           )}
         </div>
