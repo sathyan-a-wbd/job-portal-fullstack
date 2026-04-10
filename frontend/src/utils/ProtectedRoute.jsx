@@ -4,33 +4,29 @@ import { validateUser } from "../services/api";
 import GlobalLoader from "../components/GlobalLoader";
 
 const ProtectedRoute = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const [isValid, setIsValid] = useState(false);
+  const token = localStorage.getItem("token");
+  // const [isValid, setIsValid] = useState(false);
 
-  useEffect(() => {
-    const userAuth = async () => {
-      try {
-        const res = await validateUser();
-        if (res) {
-          setIsValid(true);
-        } else {
-          setIsValid(false);
-        }
-      } catch (error) {
-        setIsValid(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const userAuth = async () => {
+  //     try {
+  //       const res = await validateUser();
+  //       if (res) {
+  //         setIsValid(true);
+  //       } else {
+  //         setIsValid(false);
+  //       }
+  //     } catch (error) {
+  //       setIsValid(false);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    userAuth();
-  }, []);
+  //   userAuth();
+  // }, []);
 
-  if (loading) {
-    return <GlobalLoader />;
-  }
-
-  if (!isValid) {
+  if (!token) {
     return <Navigate to="/login" />;
   }
 
