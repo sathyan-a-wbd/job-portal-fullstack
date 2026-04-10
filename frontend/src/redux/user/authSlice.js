@@ -1,6 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../services/newApi";
 
+export const createUser = createAsyncThunk(
+  "auth/createUser",
+  async (data, thunkAPI) => {
+    try {
+      const res = await API.post("/api/users/register", data);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  },
+);
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (data, thunkAPI) => {
@@ -82,7 +93,17 @@ export const generateSummary = createAsyncThunk(
     }
   },
 );
-
+export const forgotPassword = createAsyncThunk(
+  "auth/createUser",
+  async (data, thunkAPI) => {
+    try {
+      const res = await API.post("/api/users/forgot-password", data);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  },
+);
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -104,6 +125,16 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(createUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createUser.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // LOGIN
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
@@ -126,7 +157,10 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(getProfile.fulfilled, (state, action) => {
-        state.currentUser = action.payload;
+        state.currentUser = {
+          ...action.payload.user,
+          ...action.payload.profile,
+        };
         state.loading = false;
       })
 

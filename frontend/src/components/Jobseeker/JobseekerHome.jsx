@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 
 import { setLoading } from "../../redux/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NavbarProfileDashboard from "../NavbarProfileDashboard";
 import Jobs from "../../pages/Jobs";
 
 const JobseekerHome = ({ jobDetails }) => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(setLoading(false));
   }, []);

@@ -1,10 +1,16 @@
 import React from "react";
-import JobseekerDashboard from "../components/jobseeker_components/JobseekerDashboard";
+import JobseekerDashboard from "../components/Jobseeker/JobseekerDashboard";
+import { useSelector } from "react-redux";
+import EmpDashBoard from "../components/Employer/EmpDashBoard";
 
 const Dashboard = () => {
+  const { currentUser } = useSelector((state) => state.auth);
+  const currentRole = currentUser?.userType;
   return (
     <>
-      <JobseekerDashboard />
+      {currentRole === "employer" ?
+        <EmpDashBoard />
+      : <JobseekerDashboard />}
     </>
   );
 };

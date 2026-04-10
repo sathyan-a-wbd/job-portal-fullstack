@@ -34,12 +34,18 @@ const educationSchema = new Schema(
   { _id: true },
 );
 
-const companySchema = new Schema({
+const employerSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    unique: true,
+  },
   companyName: { type: String, default: "" },
   companyEmail: { type: String, default: "" },
   companyLocation: { type: String, default: "" },
   website: { type: String, default: "" },
   description: { type: String, default: "" },
+  profileImage: { type: String, default: "" },
 });
 
 const userSchema = new Schema(
@@ -65,50 +71,103 @@ const userSchema = new Schema(
     password: { type: String, required: true, minlength: 6 },
 
     mobile: { type: String, default: "" },
-    location: { type: String, default: "" },
-    dob: { type: String, default: "" },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    // location: { type: String, default: "" },
+    // dob: { type: String, default: "" },
 
-    profileSummary: { type: String, default: "", maxlength: 500 },
+    // profileSummary: { type: String, default: "", maxlength: 500 },
 
-    skills: { type: [String], default: [] },
-    languages: { type: [String], default: [] },
+    // skills: { type: [String], default: [] },
+    // languages: { type: [String], default: [] },
 
-    jobPrefrence: { type: [String], default: [] },
-    availabilty: {
-      type: String,
-      enum: ["Immediate", "15 Days", "1 Month", "2 Month", "3 Month", ""],
-      default: "",
-    },
+    // jobPrefrence: { type: [String], default: [] },
+    // availabilty: {
+    //   type: String,
+    //   enum: ["Immediate", "15 Days", "1 Month", "2 Month", "3 Month", ""],
+    //   default: "",
+    // },
 
-    preferredLocation: { type: [String], default: [] },
+    // preferredLocation: { type: [String], default: [] },
 
-    experience: { type: [experienceSchema], default: [] },
-    educations: { type: [educationSchema], default: [] },
+    // experience: { type: [experienceSchema], default: [] },
+    // educations: { type: [educationSchema], default: [] },
 
-    profileImage: { type: String, default: "" },
+    // profileImage: { type: String, default: "" },
 
-    company: {
-      type: companySchema,
-      default: null,
-    },
-    resume: {
-      type: String,
-      default: "",
-    },
-    aiSummaryCount: {
-      type: Number,
-      default: 0,
-    },
-    lastSummaryDate: {
-      type: Date,
-      default: null,
-    },
-    resumeName: {
-      type: String,
-      default: "",
-    },
+    // // company: {
+    // //   type: companySchema,
+    // //   default: null,
+    // // },
+    // resume: {
+    //   type: String,
+    //   default: "",
+    // },
+    // aiSummaryCount: {
+    //   type: Number,
+    //   default: 0,
+    // },
+    // lastSummaryDate: {
+    //   type: Date,
+    //   default: null,
+    // },
+    // resumeName: {
+    //   type: String,
+    //   default: "",
+    // },
   },
   { timestamps: true },
 );
+const jobseekerSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    unique: true,
+  },
+  location: { type: String, default: "" },
+  dob: { type: String, default: "" },
 
-module.exports = mongoose.model("User", userSchema);
+  profileSummary: { type: String, default: "", maxlength: 500 },
+
+  skills: { type: [String], default: [] },
+  languages: { type: [String], default: [] },
+
+  jobPrefrence: { type: [String], default: [] },
+  availabilty: {
+    type: String,
+    enum: ["Immediate", "15 Days", "1 Month", "2 Month", "3 Month", ""],
+    default: "",
+  },
+
+  preferredLocation: { type: [String], default: [] },
+
+  experience: { type: [experienceSchema], default: [] },
+  educations: { type: [educationSchema], default: [] },
+
+  profileImage: { type: String, default: "" },
+
+  // company: {
+  //   type: companySchema,
+  //   default: null,
+  // },
+  resume: {
+    type: String,
+    default: "",
+  },
+  aiSummaryCount: {
+    type: Number,
+    default: 0,
+  },
+  lastSummaryDate: {
+    type: Date,
+    default: null,
+  },
+  resumeName: {
+    type: String,
+    default: "",
+  },
+});
+const User = mongoose.model("User", userSchema);
+const Employer = mongoose.model("Employer", employerSchema);
+const Jobseeker = mongoose.model("Jobseeker", jobseekerSchema);
+module.exports = { User, Employer, Jobseeker };

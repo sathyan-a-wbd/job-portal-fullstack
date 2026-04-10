@@ -15,9 +15,8 @@ export const registerSchema = yup.object({
     .string()
     .required("Confirm password is required")
     .oneOf([yup.ref("password")], "Passwords must match"),
-  userType: yup.string().required("Select user type"),
+  userType: yup.string().default("jobseeker"),
 
-  // Conditional Validation for Recruiters
   companyName: yup.string().when("userType", {
     is: "employer",
     then: (schema) =>
@@ -27,6 +26,22 @@ export const registerSchema = yup.object({
   companyLocation: yup.string().when("userType", {
     is: "employer",
     then: (schema) => schema.required("Location is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  comapanyEmail: yup
+    .string()
+    .email("Enter valid email")
+    .required("Email is required")
+    .when("userType", {
+      is: "employer",
+      then: (schema) =>
+        schema.required("Company name is required for recruiters"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  description: yup.string().when("userType", {
+    is: "employer",
+    then: (schema) =>
+      schema.required("Company name is required for recruiters"),
     otherwise: (schema) => schema.notRequired(),
   }),
   website: yup.string().url("Enter a valid URL (https://...)").notRequired(),

@@ -7,17 +7,16 @@ import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import NavbarProfileDashboard from "../NavbarProfileDashboard";
 import Searchbar from "../Searchbar";
-import { useSelector } from "react-redux";
 
-const EmpNav = () => {
+const SeekNav = () => {
   const [notification, setNotification] = useState(10);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
+  const [visibleNav, setVisibleNav] = useState(false);
 
-  const isLogin = useSelector((state) => state.users.isLogin);
   return (
     <section
-      className={`w-full sm:shadow roboto sm:bg-white ${isLogin ? "hidden" : "block"} `}
+      className={`w-full sm:shadow roboto sm:bg-white ${visibleNav ? "hidden" : "block"} `}
     >
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}
@@ -40,18 +39,21 @@ const EmpNav = () => {
             <h3 className="w-full text-left px-1 text-sm tracking-widest text-[#4485fd]">
               Jobist<span className="text-red-400 text-sm">.com</span>
             </h3>
-            <NavbarProfileDashboard setMobileNav={setMobileNav} />
+            <NavbarProfileDashboard
+              setMobileNav={setMobileNav}
+              setVisibleNav={setVisibleNav}
+            />
             <span className="w-full h-0.5  rounded-sm bg-[#4485fd31]">
               {""}
             </span>
-            <div className=" flex flex-col gap-3 text-sm items-left w-full px-3 mt-5">
+            <div className=" flex poppins flex-col gap-3 text-sm items-left w-full px-3 mt-5">
               <h4 className="text-xs text-[#6ca0dc] mb-3">nav-links</h4>
               <Link
                 onClick={() => setMobileNav(false)}
                 className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
                 to={"/"}
               >
-                Dashboard
+                Home
                 <FaAnglesRight />
               </Link>
               <Link
@@ -59,6 +61,7 @@ const EmpNav = () => {
                 className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
                 to={"/jobs-list"}
               >
+                Jobs
                 <FaAnglesRight />
               </Link>
             </div>
@@ -73,12 +76,12 @@ const EmpNav = () => {
         </div>
         {/* navlinks */}
         <nav className="order-2 sm:block hidden">
-          <ul className="flex gap-5 items-center tracking-wide">
-            <li className="hover:text-[#6ca0dc] transition-all duration-300 ease-in-out">
-              <Link to={"/"}>Dashboard</Link>
+          <ul className="flex gap-5 poppins text-sm items-center tracking-wide">
+            <li className="hover:text-[#6ca0dc]  poppins transition-all duration-300 ease-in-out">
+              <Link to={"/"}>Home</Link>
             </li>
-            <li className="hover:text-[#6ca0dc] transition-all duration-300 ease-in-out">
-              <Link to={"/jobs-list"}>Post Job</Link>
+            <li className="hover:text-[#6ca0dc] poppins transition-all duration-300 ease-in-out">
+              <Link to={"/jobs-list"}>Jobs</Link>
             </li>
           </ul>
         </nav>
@@ -124,4 +127,4 @@ const EmpNav = () => {
   );
 };
 
-export default EmpNav;
+export default SeekNav;

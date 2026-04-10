@@ -7,16 +7,19 @@ import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import NavbarProfileDashboard from "../NavbarProfileDashboard";
 import Searchbar from "../Searchbar";
+import { useSelector } from "react-redux";
+import { CiSquarePlus } from "react-icons/ci";
+import { LuPlus } from "react-icons/lu";
 
-const SeekNav = () => {
+const EmpNav = () => {
   const [notification, setNotification] = useState(10);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
-  const [visibleNav, setVisibleNav] = useState(false);
 
+  const isLogin = useSelector((state) => state.users.isLogin);
   return (
     <section
-      className={`w-full sm:shadow roboto sm:bg-white ${visibleNav ? "hidden" : "block"} `}
+      className={`w-full sm:shadow roboto sm:bg-white ${isLogin ? "hidden" : "block"} `}
     >
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}
@@ -39,10 +42,7 @@ const SeekNav = () => {
             <h3 className="w-full text-left px-1 text-sm tracking-widest text-[#4485fd]">
               Jobist<span className="text-red-400 text-sm">.com</span>
             </h3>
-            <NavbarProfileDashboard
-              setMobileNav={setMobileNav}
-              setVisibleNav={setVisibleNav}
-            />
+            <NavbarProfileDashboard setMobileNav={setMobileNav} />
             <span className="w-full h-0.5  rounded-sm bg-[#4485fd31]">
               {""}
             </span>
@@ -53,7 +53,7 @@ const SeekNav = () => {
                 className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
                 to={"/"}
               >
-                Home
+                Dashboard
                 <FaAnglesRight />
               </Link>
               <Link
@@ -61,7 +61,6 @@ const SeekNav = () => {
                 className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
                 to={"/jobs-list"}
               >
-                Jobs
                 <FaAnglesRight />
               </Link>
             </div>
@@ -74,24 +73,27 @@ const SeekNav = () => {
             Jobist<span className="text-red-400 text-lg sm:text-xl">.com</span>
           </h3>
         </div>
-        {/* navlinks */}
-        <nav className="order-2 sm:block hidden">
-          <ul className="flex gap-5 items-center tracking-wide">
-            <li className="hover:text-[#6ca0dc] transition-all duration-300 ease-in-out">
-              <Link to={"/"}>Home</Link>
-            </li>
-            <li className="hover:text-[#6ca0dc] transition-all duration-300 ease-in-out">
-              <Link to={"/jobs-list"}>Jobs</Link>
-            </li>
-          </ul>
-        </nav>
+
         {/* search-bar */}
 
-        <Searchbar />
+        {/* <Searchbar /> */}
 
         {/* profile and notification */}
         <nav className="order-3 lg:order-4">
-          <ul className="flex items-center gap-5">
+          <ul className="flex items-center font-medium tracking-wide gap-5">
+            {/* navlinks */}
+            <li className="hover:text-[#6ca0dc] inter text-sm transition-all duration-300 ease-in-out">
+              <Link to={"/"}>Dashboard</Link>
+            </li>
+            <li className="text-[#6ca0dc]  inter text-sm transition-all duration-300 ease-in-out">
+              <Link
+                to={"/post-job"}
+                className="flex items-center hover:shadow-md uppercase justify-center gap-2 ring-1 ring-[#4485fd] rounded-full px-3 py-2"
+              >
+                {" "}
+                <LuPlus size={18} /> Post a job
+              </Link>
+            </li>
             <Link
               to={"/notifications"}
               className={`cursor-pointer relative  inline-block `}
@@ -127,4 +129,4 @@ const SeekNav = () => {
   );
 };
 
-export default SeekNav;
+export default EmpNav;

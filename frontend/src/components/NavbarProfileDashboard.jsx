@@ -61,11 +61,7 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
               to={"/profile-dashboard"}
             >
               {currentUser?.profileImage ?
-                <img
-                  src={currentUser?.profileImage}
-                  alt="profile-img"
-                  loading="lazy"
-                />
+                <img src={currentUser?.profileImage} alt="profile-img" />
               : <FaUserAlt
                   color="#4485fd"
                   className="text-7xl translate-y-2 "
@@ -76,7 +72,9 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
           <div className="">
             <h2 className="text-lg">{currentUser?.fname}</h2>
             <span className="text-sm text-gray-500 text-wrap max-w-80">
-              {currentUser?.educations[0]?.courseName}
+              {currentUser?.educations?.length > 0 ?
+                currentUser.educations[0].courseName
+              : currentUser?.companyName}
             </span>
             <li
               onClick={() => {

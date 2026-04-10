@@ -1,6 +1,6 @@
 import React from "react";
-import SeekNav from "./jobseeker_components/SeekNav";
-import EmpNav from "./employer_components/EmpNav";
+import SeekNav from "./Jobseeker/SeekNav";
+import EmpNav from "./Employer/EmpNav";
 import { useSelector } from "react-redux";
 
 const NavBar = () => {
@@ -8,8 +8,9 @@ const NavBar = () => {
   const userType = currentUser?.userType;
   return (
     <>
-      {userType === "jobseeker" && <SeekNav />}
-      {userType === "employer" && <EmpNav />}
+      {userType === "employer" ?
+        <EmpNav />
+      : <SeekNav />}
     </>
   );
 };

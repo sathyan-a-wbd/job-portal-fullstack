@@ -1,12 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { LoginUser } from "../services/api";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../features/validations/loginSchema";
-import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
 import { getProfile, loginUser } from "../redux/user/authSlice";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ const Login = () => {
 
       navigate("/profile-dashboard", { replace: true });
     } catch (err) {
-      console.log("Login Error:", err);
+      toast.error("Login Error:", err);
     }
   };
   const token = localStorage.getItem("token");
@@ -70,7 +69,10 @@ const Login = () => {
               >
                 Enter password
               </label>
-              <Link className="text-[#6ca0dc] text-sm font-medium">
+              <Link
+                to="/forgot-password"
+                className="text-[#6ca0dc] text-sm font-medium"
+              >
                 Forgot ?
               </Link>
             </div>

@@ -24,6 +24,13 @@ import GlobalLoader from "./components/GlobalLoader";
 
 import { getProfile } from "./redux/user/authSlice";
 
+import EmployerRegister from "./components/Employer/EmpRegister";
+import EmpJobActions from "./components/Employer/EmpJobActions";
+import EmpJobPost from "./components/Employer/EmpJobPost";
+import { getMyJobs } from "./redux/jobs/jobSlice";
+import { Toaster } from "react-hot-toast";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
 
@@ -33,15 +40,24 @@ export default function App() {
       try {
         await dispatch(getProfile()).unwrap();
       } catch (err) {
-        console.log("Error fetching profile:", err);
+        console.error("Error fetching profile:", err);
       }
     }
     fetchProfile();
+    async function fetchJobs() {
+      try {
+        await dispatch(getMyJobs()).unwrap();
+      } catch (err) {
+        console.error("Error fetching jobs:", err);
+      }
+    }
+    fetchJobs();
   }, [dispatch]);
 
   return (
     <>
       <GlobalLoader />
+      <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home jobDetails={jobDetails} />} />
@@ -53,6 +69,10 @@ export default function App() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/empregister" element={<EmployerRegister />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+
           <Route
             path="/profile-dashboard"
             element={
@@ -66,6 +86,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <ProfileEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/emp-job-actions"
+            element={
+              <ProtectedRoute>
+                <EmpJobActions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/post-job"
+            element={
+              <ProtectedRoute>
+                <EmpJobPost />
               </ProtectedRoute>
             }
           />

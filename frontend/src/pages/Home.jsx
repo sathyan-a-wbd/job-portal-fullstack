@@ -2,14 +2,15 @@ import React, { useEffect } from "react";
 
 import { setLoading } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import JobseekerHome from "../components/jobseeker_components/JobseekerHome";
-import EmpHome from "../components/employer_components/EmpHome";
+
+import EmpHome from "../components/Employer/EmpHome";
+import JobseekerHome from "../components/Jobseeker/JobseekerHome";
 
 const Home = ({ jobDetails }) => {
-  const currentUser = useSelector((state) => state.users.currentUser);
-  console.log(currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
 
   const userType = currentUser?.userType;
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setLoading(false));

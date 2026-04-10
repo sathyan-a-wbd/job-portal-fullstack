@@ -4,7 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
-import { generateSummary, updateUser } from "../redux/user/authSlice";
+import { toast } from "react-hot-toast";
+import {
+  generateSummary,
+  updateUser,
+  getProfile,
+} from "../redux/user/authSlice";
 
 const ProfileEdit = () => {
   const params = new URLSearchParams(location.search);
@@ -13,13 +18,12 @@ const ProfileEdit = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ─── Redux State ───────────────────────────────────────────────
-  const currentUser = useSelector((state) => state.auth.currentUser);
-  const isLoading = useSelector((state) => state.auth.loading);
-  const reduxError = useSelector((state) => state.auth.error);
+  const { currentUser, isLoading, reduxError } = useSelector(
+    (state) => state.auth,
+  );
 
-  // ─── Local UI State (only what Redux shouldn't own) ────────────
-  // A local draft copy so the user can type freely before hitting Submit
+  const userType = currentUser?.userType;
+
   const [draft, setDraft] = useState(null);
   const [summaryRemains, setSummaryRemains] = useState(5);
 
@@ -86,7 +90,7 @@ const ProfileEdit = () => {
       setDraft((prev) => ({ ...prev, profileSummary: res.summary }));
       setSummaryRemains(res.remaining);
     } catch (err) {
-      console.error("Summary generation failed:", err);
+      toast.error("Summary generation failed:", err);
     }
   };
 
@@ -116,8 +120,7 @@ const ProfileEdit = () => {
       await dispatch(updateUser(cleanData)).unwrap();
       alert("Deleted successfully");
     } catch (err) {
-      console.error("Delete failed:", err);
-      alert("Delete failed");
+      toast.error("Delete failed", err);
     }
   };
 
@@ -139,13 +142,13 @@ const ProfileEdit = () => {
         const { _id, ...cleanData } = dataToSave;
 
         await dispatch(updateUser(cleanData)).unwrap();
+        await dispatch(getProfile()).unwrap();
         setImageFile(null);
         setPreviewImage(null);
         alert("Profile Updated Successfully!");
         navigate("/profile-dashboard");
       };
 
-      // Handle profile image conversion to base64
       if (imageFile) {
         if (imageFile.size > 2 * 1024 * 1024) {
           alert("Image size should be less than 2MB");
@@ -161,8 +164,9 @@ const ProfileEdit = () => {
         await saveAndNavigate(updatedDraft);
       }
     } catch (err) {
-      console.error("Update process failed:", err);
-      alert(reduxError?.message || "Something went wrong while updating.");
+      toast.error(
+        reduxError?.message || "Something went wrong while updating.",
+      );
     }
   };
 
@@ -183,30 +187,114 @@ const ProfileEdit = () => {
           <div className="flex w-full flex-col gap-10 poppins justify-between p-3">
             <h1 className="poppins text-xl">Add basic details</h1>
 
+            {userType === "jobseeker" &&
+              [
+                {
+                  label: "Full name",
+                  key: "fname",
+                  type: "text",
+                  placeholder: "name",
+                },
+                {
+                  label: "Mobile",
+                  key: "mobile",
+                  type: "text",
+                  placeholder: "mobile",
+                },
+                {
+                  label: "Current location",
+                  key: "location",
+                  type: "text",
+                  placeholder: "Location",
+                },
+                {
+                  label: "Date of birth",
+                  key: "dob",
+                  type: "date",
+                  placeholder: "",
+                },
+              ].map(({ label, key, type, placeholder }) => (
+                <div
+                  key={key}
+                  className="input-field w-full flex flex-col gap-1"
+                >
+                  <label className="text-gray-500 poppins text-sm font-medium">
+                    {label}
+                  </label>
+                  <input
+                    type={type}
+                    value={draft[key] ?? ""}
+                    onChange={(e) =>
+                      setDraft({ ...draft, [key]: e.target.value })
+                    }
+                    placeholder={placeholder}
+                    className="relative px-3 py-2 text-gray-800 outline-none poppins border-b border-b-[#bcd4e6] rounded-sm"
+                  />
+                </div>
+              ))}
+            {userType === "employer" &&
+              [
+                {
+                  label: "Full name",
+                  key: "fname",
+                  type: "text",
+                  placeholder: "name",
+                },
+                {
+                  label: "Mobile",
+                  key: "mobile",
+                  type: "text",
+                  placeholder: "mobile",
+                },
+              ].map(({ label, key, type, placeholder }) => (
+                <div
+                  key={key}
+                  className="input-field w-full flex flex-col gap-1"
+                >
+                  <label className="text-gray-500 poppins text-sm font-medium">
+                    {label}
+                  </label>
+                  <input
+                    type={type}
+                    value={draft[key] ?? ""}
+                    onChange={(e) =>
+                      setDraft({ ...draft, [key]: e.target.value })
+                    }
+                    placeholder={placeholder}
+                    className="relative px-3 py-2 text-gray-800 outline-none poppins border-b border-b-[#bcd4e6] rounded-sm"
+                  />
+                </div>
+              ))}
+          </div>
+        )}
+
+        {userEdit === "companyDetails" && (
+          <div className="flex w-full flex-col gap-10 poppins justify-between p-3">
+            <h1 className="poppins text-xl">Edit company details</h1>
             {[
               {
-                label: "Full name",
-                key: "fname",
+                label: "Company name",
+                key: "companyName",
                 type: "text",
-                placeholder: "name",
+                placeholder: "Company name",
               },
               {
-                label: "Mobile",
-                key: "mobile",
+                label: "Company mail",
+                key: "companyEmail",
                 type: "text",
-                placeholder: "mobile",
+                placeholder: "Company Email",
               },
               {
-                label: "Current location",
-                key: "location",
+                label: "Company location",
+                key: "companyLocation",
                 type: "text",
-                placeholder: "Location",
+                placeholder: "Company location",
               },
               {
-                label: "Date of birth",
-                key: "dob",
-                type: "date",
-                placeholder: "",
+                label: "Company website link",
+                key: "website",
+                type: "text",
+                placeholder: "Company website",
               },
             ].map(({ label, key, type, placeholder }) => (
               <div key={key} className="input-field w-full flex flex-col gap-1">
@@ -226,7 +314,21 @@ const ProfileEdit = () => {
             ))}
           </div>
         )}
-
+        {userEdit === "companyDescription" && (
+          <div className="flex w-full flex-col gap-10 poppins justify-between p-3">
+            <h1 className="poppins text-xl">Add your company description </h1>
+            <textarea
+              value={draft?.description || ""}
+              onChange={(e) =>
+                setDraft({ ...draft, description: e.target.value })
+              }
+              placeholder="Write a short description about your company"
+              rows={5}
+              maxLength={500}
+              className="relative px-3 py-2 text-gray-800 outline-none border border-[#bcd4e6] rounded-md resize-none"
+            />
+          </div>
+        )}
         {userEdit === "careerPrefer" && (
           <div className="flex w-full flex-col gap-10 poppins justify-between p-3">
             <h1 className="poppins text-xl">Add your career preferences</h1>

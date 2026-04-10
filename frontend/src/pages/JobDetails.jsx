@@ -12,15 +12,16 @@ import { LiaWalletSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedJob } from "../redux/jobs/jobSlice";
-
-const JobDetails = ({ jobDetails }) => {
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { getRelativeTime } from "../utils/getRelativeTIme";
+const JobDetails = () => {
+  const { currentUser } = useSelector((state) => state.auth);
+  const { jobs = [] } = useSelector((state) => state.jobs);
   const [searchParams] = useSearchParams();
+  const userType = currentUser?.userType;
   const jobId = searchParams.get("job_id");
-
-  const job =
-    jobDetails.find((job) => job.id === Number(jobId)) || jobDetails[0];
-
   const dispatch = useDispatch();
+  const job = jobs.find((j) => j._id.toString() === jobId);
   const selectedJob = useSelector((state) => state.jobs.selectedJob);
 
   useEffect(() => {
@@ -42,27 +43,36 @@ const JobDetails = ({ jobDetails }) => {
   }, [selectedJob]);
   return (
     <section
-      className={`fixed h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:px-2 md:py-2 top-0 left-0 `}
+      className={`fixed w-full h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:px-2 md:py-2 top-0 left-0 `}
     >
       {job && (
         <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">
-          <Link className="w-full md:hidden flex items-center justify-end">
+          <Link
+            to={"/"}
+            className="w-full md:hidden flex items-center justify-end"
+          >
             <IoClose
               size={20}
               onClick={() => dispatch(setSelectedJob(false))}
             />
           </Link>
+          {userType === "employer" && (
+            <Link to={"/"}>
+              <FaArrowLeftLong />
+            </Link>
+          )}
+
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between py-2">
               <div>
                 <h2 className="text-[24px] font-semibold">{job.title}</h2>
-                <h4 className="text-gray-600 font-medium">{job.company}</h4>
+                <h4 className="text-gray-600 font-medium">{job.companyName}</h4>
               </div>
               <div className="w-15 h-15 flex items-center overflow-hidden bg-amber-50 justify-center rounded-3xl ring-1 ring-[#bcd4e6]">
-                {job.companyImg ?
-                  <img src={job.companyImg} />
+                {job?.companyLogo ?
+                  <img src={job?.companyLogo} />
                 : <h3 className="text-5xl text-amber-700 ">
-                    {job.company.slice(0, 1)}
+                    {job?.companyName?.slice(0, 1)}
                   </h3>
                 }
               </div>
@@ -84,14 +94,23 @@ const JobDetails = ({ jobDetails }) => {
                   {job.salary}
                 </span>
               </div>
+              <div className="flex gap-2 items-center">
+                <span className="flex gap-1 text-xs items-center">
+                  {getRelativeTime(job.createdAt)}
+                </span>
+              </div>
             </div>
             <div className="flex items-center gap-5 mt-2">
-              <button className="px-8 py-2 text-white bg-[#4485fd] rounded-3xl">
+              <button
+                className={`  ${currentUser?.userType === "employer" ? "hidden" : "block"}  px-8 py-2 text-white bg-[#4485fd] rounded-3xl`}
+              >
                 Apply
               </button>
-              <span className="flex items-center cursor-pointer gap-1 text-sm text-gray-500 tracking-wider">
+              <span
+                className={` ${currentUser?.userType === "employer" ? "hidden" : "block"}  flex items-center cursor-pointer gap-1 text-sm text-gray-500 tracking-wider`}
+              >
                 <MdBookmarkBorder size={20} id="save" />{" "}
-                <label className="cursor-pointer" htmlFor="save">
+                <label className={`cursor-pointer`} htmlFor="save">
                   Save
                 </label>
               </span>

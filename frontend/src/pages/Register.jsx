@@ -4,25 +4,34 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../features/validations/registerSchema";
 import { CreateUser } from "../services/api";
+import { createUser } from "../redux/user/authSlice";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 const Register = () => {
+  const params = new URLSearchParams(location.search);
+  const userType = params.get("userType");
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(registerSchema), mode: "onChange" });
   const navigate = useNavigate();
-  const selectedUserType = watch("userType");
-
+  const dispatch = useDispatch();
   const onSubmit = async (data) => {
     try {
+      data.userType = userType || "jobseeker";
       const { confirmPassword, ...filterData } = data;
-      const res = await CreateUser(filterData);
-      alert("✅ User created:");
-      navigate("/login");
+      const res = await dispatch(createUser(filterData));
+
+      if (createUser.fulfilled.match(res)) {
+        alert("✅ User created");
+        navigate("/login");
+      } else {
+        alert(res.payload?.message || "Register failed");
+      }
     } catch (error) {
-      alert("Login failed : Plase try again");
+      toast.error("Register failed : Plase try again", error);
     }
   };
 
@@ -80,7 +89,7 @@ const Register = () => {
           </div>
 
           {/* 4. User Type */}
-          <div className="input-field w-full flex flex-col gap-1">
+          {/* <div className="input-field w-full flex flex-col gap-1">
             <label className="text-gray-500 text-sm font-medium">
               User type
             </label>
@@ -93,34 +102,9 @@ const Register = () => {
               <option value="employer">Recruiter</option>
             </select>
             <p className="text-red-700 text-xs">{errors.userType?.message}</p>
-          </div>
+          </div> */}
 
           {/* Dynamic Recruiter Fields */}
-          {selectedUserType === "employer" && (
-            <div className="w-full flex flex-col gap-2 mt-2 p-3 bg-gray-50 rounded-md border border-dashed border-[#bcd4e6]">
-              <h2 className="text-sm font-bold text-gray-600 mb-1">
-                Company Details
-              </h2>
-              <input
-                type="text"
-                {...register("companyName")}
-                placeholder="Company Name"
-                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
-              />
-              <input
-                type="text"
-                {...register("companyLocation")}
-                placeholder="Company Location"
-                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
-              />
-              <input
-                type="text"
-                {...register("website")}
-                placeholder="Company website"
-                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
-              />
-            </div>
-          )}
 
           {/* 5. Password */}
           <div className="input-field w-full flex flex-col gap-1">
@@ -151,6 +135,43 @@ const Register = () => {
               {errors.confirmPassword?.message}
             </p>
           </div>
+          {userType === "employer" && (
+            <div className="w-full flex flex-col gap-2 mt-2 p-3 bg-gray-50 rounded-md border border-dashed border-[#bcd4e6]">
+              <h2 className="text-sm font-bold text-gray-600 mb-1">
+                Company Details
+              </h2>
+              <input
+                type="text"
+                {...register("companyName")}
+                placeholder="Company Name"
+                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
+              />
+              <input
+                type="text"
+                {...register("companyLocation")}
+                placeholder="Company Location"
+                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
+              />
+              <input
+                type="text"
+                {...register("companyEmail")}
+                placeholder="Company email"
+                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
+              />
+              <input
+                type="text"
+                {...register("description")}
+                placeholder="Company description"
+                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
+              />
+              <input
+                type="text"
+                {...register("website")}
+                placeholder="Company website"
+                className="px-3 py-2 outline-none ring-1 ring-[#bcd4e6] rounded-sm bg-white"
+              />
+            </div>
+          )}
 
           <button
             type="submit"
@@ -164,6 +185,14 @@ const Register = () => {
               Already have an account?{" "}
               <Link className="text-[#6ca0dc] underline" to={"/login"}>
                 Login
+              </Link>
+            </span>
+          </div>
+          <div className="text-sm text-gray-500 text-center">
+            <span>
+              Do you want to register as an employer?{" "}
+              <Link to={"/empregister"} className="text-[#6ca0dc] underline">
+                Employer register
               </Link>
             </span>
           </div>

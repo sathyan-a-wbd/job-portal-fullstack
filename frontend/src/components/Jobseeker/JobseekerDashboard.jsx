@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { FiFileText } from "react-icons/fi";
 import { IoIosCall } from "react-icons/io";
@@ -7,13 +7,13 @@ import { TiLocation } from "react-icons/ti";
 import { FiEdit2 } from "react-icons/fi";
 import { LuFolderPlus } from "react-icons/lu";
 import { Link } from "react-router-dom";
-
+import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../../redux/user/userSlice";
+
 import { deleteResume, uploadResume } from "../../redux/user/authSlice";
 import API from "../../services/newApi";
 const JobseekerDashboard = () => {
-  const { currentUser: user, loading } = useSelector((state) => state.auth);
+  const { currentUser: user } = useSelector((state) => state.auth);
 
   const [file, setFile] = useState(null);
   const [updateMenu, setUpdateMenu] = useState(false);
@@ -29,8 +29,7 @@ const JobseekerDashboard = () => {
       setUpdateMenu(false);
       setFile(null);
     } catch (err) {
-      console.log("Upload Error:", err);
-      alert("Failed to upload resume");
+      toast.error("Failed to upload resume:", err);
     }
   };
   const handleDelete = async () => {
@@ -38,7 +37,7 @@ const JobseekerDashboard = () => {
       await dispatch(deleteResume()).unwrap();
       setUpdateMenu(false);
     } catch (err) {
-      console.log(err);
+      toast.error("Failed to delete resume:", err);
     }
   };
   const handleDownload = () => {

@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Jobcard from "../components/Jobcard";
 import JobDetails from "./JobDetails";
 import { useSearchParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-const Jobs = ({ jobDetails }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { getAllJobs } from "../redux/jobs/jobSlice";
+import TrailJobcard from "../components/TrailJobCard";
+import { toast } from "react-hot-toast";
+const Jobs = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchAllJobs = async () => {
+      try {
+        await dispatch(getAllJobs()).unwrap();
+      } catch (err) {
+        toast.error("Error fetching jobs:", err);
+      }
+    };
+    fetchAllJobs();
+  }, []);
   const [searchParams] = useSearchParams();
+  const { jobs = [] } = useSelector((state) => state.jobs);
   const selectedJob = useSelector((state) => state.jobs.selectedJob);
 
   const isSelectedJob = !!selectedJob;
-  const id = searchParams.get("jobidelmentrfid");
+  const id = searchParams.get("job_id");
   return (
     <section className="grid grid-cols-1 items-center w-full gap-10 px-0 md:px-10 ">
       <div className="flex flex-col md:flex-row md:ring-1 md:ring-[#bcd4e6]/30 sm:py-5 rounded-xl ">
@@ -18,12 +33,16 @@ const Jobs = ({ jobDetails }) => {
           <h3 className="my-5 font-semibold text-lg text-gray-700">
             Jobs for you
           </h3>
-          <Jobcard jobDetails={jobDetails} />
+          <div className={` grid grid-cols-1 md:grid-cols-1 gap-8 relative`}>
+            {jobs.map((job) => (
+              <Jobcard key={job._id} jobDetails={job} />
+            ))}
+          </div>
         </div>
         <div
           className={`${isSelectedJob ? "block" : "hidden"} w-full md:w-[55%]  md:block py-1 px-2`}
         >
-          <JobDetails jobDetails={jobDetails} />
+          <JobDetails jobDetails={jobs} />
         </div>
       </div>
     </section>

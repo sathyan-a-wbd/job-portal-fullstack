@@ -122,3 +122,31 @@ CMYK 58, 37, 0, 7*/
 .hover-btn:hover::after {
   left: 130%;
 }
+
+.tab-active {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.tab-acive::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  botttom: 0;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-bottom-right-radius: 16px;
+  box-shadow: 4px 4px 0 0 white;
+}
+
+.tab-acive::after {
+  content: "";
+  position: absolute;
+  right: -16px;
+  botttom: 0;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-bottom-left-radius: 16px;
+  box-shadow: 4px 4px 0 0 white;
+}

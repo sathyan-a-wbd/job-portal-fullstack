@@ -7,15 +7,7 @@ const jobSchema = new mongoose.Schema(
       required: [true, "Job title is required"],
       trim: true,
     },
-    company: {
-      type: String,
-      required: [true, "Company name is required"],
-      trim: true,
-    },
-    companyImg: {
-      type: String,
-      default: "https://via.placeholder.com/150",
-    },
+
     experience: {
       type: String,
       required: true,
@@ -54,6 +46,9 @@ const jobSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    companyName: String,
+    companyLogo: String,
+    companyEmail: String,
     employmentType: {
       type: String,
       default: "Full Time, Permanent",
@@ -62,9 +57,18 @@ const jobSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    contactHR: {
+      type: "string",
+      default: "",
+    },
     saved: {
       type: Boolean,
       default: false,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true },
