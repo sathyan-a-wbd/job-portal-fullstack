@@ -25,10 +25,10 @@ const Register = () => {
       const res = await dispatch(createUser(filterData));
 
       if (createUser.fulfilled.match(res)) {
-        alert("✅ User created");
+        toast.success("User created");
         navigate("/login");
       } else {
-        alert(res.payload?.message || "Register failed");
+        toast.error(res.payload?.message || "Register failed");
       }
     } catch (error) {
       toast.error("Register failed : Plase try again", error);

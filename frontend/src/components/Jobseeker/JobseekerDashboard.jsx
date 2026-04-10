@@ -21,7 +21,7 @@ const JobseekerDashboard = () => {
   const showUploadUI = updateMenu || !user?.resume;
 
   const handleUpload = async () => {
-    if (!file) return alert("Please select a file");
+    if (!file) return toast.error("Please select a file");
 
     try {
       await dispatch(uploadResume(file)).unwrap();

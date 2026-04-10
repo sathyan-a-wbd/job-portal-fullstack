@@ -118,7 +118,7 @@ const ProfileEdit = () => {
       const { _id, ...cleanData } = updatedDraft;
 
       await dispatch(updateUser(cleanData)).unwrap();
-      alert("Deleted successfully");
+      toast.success("Deleted successfully");
     } catch (err) {
       toast.error("Delete failed", err);
     }
@@ -145,13 +145,13 @@ const ProfileEdit = () => {
         await dispatch(getProfile()).unwrap();
         setImageFile(null);
         setPreviewImage(null);
-        alert("Profile Updated Successfully!");
+        toast.success("Profile Updated Successfully!");
         navigate("/profile-dashboard");
       };
 
       if (imageFile) {
         if (imageFile.size > 2 * 1024 * 1024) {
-          alert("Image size should be less than 2MB");
+          toast.error("Image size should be less than 2MB");
           return;
         }
         const reader = new FileReader();

@@ -23,7 +23,7 @@ const Login = () => {
 
       await dispatch(getProfile()).unwrap();
 
-      alert("Logged in successfully");
+      toast.success("Logged in successfully");
 
       navigate("/profile-dashboard", { replace: true });
     } catch (err) {
