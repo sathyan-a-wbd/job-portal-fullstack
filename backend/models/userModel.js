@@ -73,48 +73,7 @@ const userSchema = new Schema(
     mobile: { type: String, default: "" },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
-    // location: { type: String, default: "" },
-    // dob: { type: String, default: "" },
-
-    // profileSummary: { type: String, default: "", maxlength: 500 },
-
-    // skills: { type: [String], default: [] },
-    // languages: { type: [String], default: [] },
-
-    // jobPrefrence: { type: [String], default: [] },
-    // availabilty: {
-    //   type: String,
-    //   enum: ["Immediate", "15 Days", "1 Month", "2 Month", "3 Month", ""],
-    //   default: "",
-    // },
-
-    // preferredLocation: { type: [String], default: [] },
-
-    // experience: { type: [experienceSchema], default: [] },
-    // educations: { type: [educationSchema], default: [] },
-
-    // profileImage: { type: String, default: "" },
-
-    // // company: {
-    // //   type: companySchema,
-    // //   default: null,
-    // // },
-    // resume: {
-    //   type: String,
-    //   default: "",
-    // },
-    // aiSummaryCount: {
-    //   type: Number,
-    //   default: 0,
-    // },
-    // lastSummaryDate: {
-    //   type: Date,
-    //   default: null,
-    // },
-    // resumeName: {
-    //   type: String,
-    //   default: "",
-    // },
+    
   },
   { timestamps: true },
 );

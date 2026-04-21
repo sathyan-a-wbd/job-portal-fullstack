@@ -9,7 +9,7 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const navigate = useNavigate();
-  // const [isValid, setIsValid] = useState(false);
+
   const handleLogOut = () => {
     dispatch(logout());
     dispatch(setCurrenUser());

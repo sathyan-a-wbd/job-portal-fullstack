@@ -55,6 +55,19 @@ export const updateJob = createAsyncThunk(
     }
   },
 );
+export const applyToJob = createAsyncThunk(
+  "job/apply",
+  async ({ jobId }, { rejectWithValue }) => {
+    try {
+      const res = await API.post(`/api/jobs/${jobId}/apply`, {}, {});
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Application failed",
+      );
+    }
+  },
+);
 export const deleteJob = createAsyncThunk(
   "job/deleteJob",
   async (id, thunkAPI) => {
@@ -70,9 +83,11 @@ export const deleteJob = createAsyncThunk(
 );
 const initialState = {
   jobs: [],
-
+  searchedJobs: { jobTitle: "", location: "" },
   loading: false,
   error: null,
+  applyStatus: "idle",
+  applyError: null,
   selectedJob: false,
 };
 
@@ -85,6 +100,13 @@ const jobSlice = createSlice({
     },
     setSelectedJob: (state, action) => {
       state.selectedJob = action.payload;
+    },
+    setSearchedJobs: (state, action) => {
+      state.searchedJobs = action.payload;
+    },
+    resetApplyStatus: (state) => {
+      state.applyStatus = "idle";
+      state.applyError = null;
     },
   },
   extraReducers: (builder) => {
@@ -145,10 +167,21 @@ const jobSlice = createSlice({
       .addCase(deleteJob.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(applyToJob.pending, (state) => {
+        state.applyStatus = "loading";
+      })
+      .addCase(applyToJob.fulfilled, (state) => {
+        state.applyStatus = "applied";
+      })
+      .addCase(applyToJob.rejected, (state, action) => {
+        state.applyStatus = "error";
+        state.applyError = action.payload;
       });
   },
 });
-export const { setJobs, setSelectedJob } = jobSlice.actions;
+export const { setJobs, setSelectedJob, setSearchedJobs, resetApplyStatus } =
+  jobSlice.actions;
 export default jobSlice.reducer;
 
 //  {

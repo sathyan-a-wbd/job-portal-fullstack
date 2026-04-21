@@ -10,14 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedJob } from "../redux/jobs/jobSlice";
 import { getRelativeTime } from "../utils/getRelativeTIme";
 
-const TrailJobcard = ({ jobDetails }) => {
+const Jobcard = ({ jobDetails }) => {
   const locationUrl = useLocation();
   const { currentUser } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const userType = currentUser?.userType;
-
   const job = jobDetails;
+  if (!job) return null;
   return (
     <div className="bg-white ">
       {job && (
@@ -31,7 +31,10 @@ const TrailJobcard = ({ jobDetails }) => {
           }
           state={{ fromList: true }}
           key={job._id}
-          className=" sm:bg-[#ffff]  bg-[#ffffffe5] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-xl sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden"
+          className=" sm:bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-xl sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 bg-white  border border-gray-100 
+shadow-[0_4px_12px_rgba(0,0,0,0.06)] 
+hover:shadow-[0_10px_40px_rgba(0,0,0,0.18)] hover:scale-101
+transition-all duration-300 overflow-hidden"
         >
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between py-2">
@@ -47,7 +50,7 @@ const TrailJobcard = ({ jobDetails }) => {
                 {job.companyLogo ?
                   <img src={job.companyLogo} />
                 : <h3 className="text-5xl text-amber-700 ">
-                    {job.company?.slice(0, 1) || "?"}
+                    {job?.companyName?.slice(0, 1) || "?"}
                   </h3>
                 }
               </div>
@@ -82,7 +85,9 @@ const TrailJobcard = ({ jobDetails }) => {
               <span className="text-xs sm:text-sm text-gray-500">
                 {getRelativeTime(job.createdAt)}
               </span>
-              <span className="flex items-center gap-1 text-sm text-gray-500 tracking-wider">
+              <span
+                className={`flex items-center ${userType === "employer" ? "hidden" : "block"} gap-1 text-sm text-gray-500 tracking-wider`}
+              >
                 <MdBookmarkBorder size={20} /> Save
               </span>
             </div>
@@ -93,4 +98,4 @@ const TrailJobcard = ({ jobDetails }) => {
   );
 };
 
-export default TrailJobcard;
+export default Jobcard;

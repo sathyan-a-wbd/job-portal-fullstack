@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const applicationRoutes = require("./routes/applicationRoute");
 dotenv.config();
 connectDB();
 
@@ -19,6 +20,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/users", userRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use("/api", applicationRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");

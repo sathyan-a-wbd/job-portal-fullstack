@@ -58,17 +58,17 @@ const EmpNav = () => {
               </Link>
               <Link
                 onClick={() => setMobileNav(false)}
-                className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
-                to={"/jobs-list"}
+                className="flex hover:bg-gray-200 items-center hover:shadow-md uppercase justify-center gap-2 ring-1 ring-[#4485fd] rounded-full px-3 py-2"
+                to={"/post-job"}
               >
-                <FaAnglesRight />
+                <LuPlus size={18} /> Post a job
               </Link>
             </div>
           </ul>
         </nav>
         {/* //logo */}
 
-        <div className="logo order-1 text-2xl font-semibold tracking-wider">
+        <div className="logo order-1 sm:text-auto text-center text-2xl font-semibold tracking-wider">
           <h3 className="text-[#4485fd] text-lg sm:text-xl">
             Jobist<span className="text-red-400 text-lg sm:text-xl">.com</span>
           </h3>
@@ -79,8 +79,8 @@ const EmpNav = () => {
         {/* <Searchbar /> */}
 
         {/* profile and notification */}
-        <nav className="order-3 lg:order-4">
-          <ul className="flex items-center font-medium tracking-wide gap-5">
+        <nav className="order-3 lg:order-4 ">
+          <ul className="hidden sm:flex items-center font-medium tracking-wide gap-5">
             {/* navlinks */}
             <li className="hover:text-[#6ca0dc] inter text-sm transition-all duration-300 ease-in-out">
               <Link to={"/"}>Dashboard</Link>
@@ -88,7 +88,7 @@ const EmpNav = () => {
             <li className="text-[#6ca0dc]  inter text-sm transition-all duration-300 ease-in-out">
               <Link
                 to={"/post-job"}
-                className="flex items-center hover:shadow-md uppercase justify-center gap-2 ring-1 ring-[#4485fd] rounded-full px-3 py-2"
+                className="flex hover:bg-gray-200 items-center hover:shadow-md uppercase justify-center gap-2 ring-1 ring-[#4485fd] rounded-full px-3 py-2"
               >
                 {" "}
                 <LuPlus size={18} /> Post a job

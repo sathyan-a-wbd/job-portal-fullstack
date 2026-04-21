@@ -1,29 +1,38 @@
 import React, { useEffect } from "react";
 
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { PiSuitcaseSimpleLight } from "react-icons/pi";
 import { CiLocationOn } from "react-icons/ci";
 import { CiMapPin } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { LuBookText } from "react-icons/lu";
-import { MdBookmarkBorder } from "react-icons/md";
+import { MdBookmarkBorder, MdArrowOutward } from "react-icons/md";
 import { MdBookmarkAdded } from "react-icons/md";
 import { LiaWalletSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedJob } from "../redux/jobs/jobSlice";
+import {
+  resetApplyStatus,
+  setSelectedJob,
+  applyToJob,
+} from "../redux/jobs/jobSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { getRelativeTime } from "../utils/getRelativeTIme";
-const JobDetails = () => {
+import toast from "react-hot-toast";
+
+const JobDetails = ({ defaultJob }) => {
   const { currentUser } = useSelector((state) => state.auth);
   const { jobs = [] } = useSelector((state) => state.jobs);
   const [searchParams] = useSearchParams();
   const userType = currentUser?.userType;
   const jobId = searchParams.get("job_id");
   const dispatch = useDispatch();
-  const job = jobs.find((j) => j._id.toString() === jobId) || jobs[0];
-  const selectedJob = useSelector((state) => state.jobs.selectedJob);
+  const job = jobs.find((j) => j._id.toString() === jobId) || defaultJob;
+  const { selectedJob, applyStatus, applyError } = useSelector(
+    (state) => state.jobs,
+  );
 
+  const navigate = useNavigate();
   useEffect(() => {
     const handleScrollLock = () => {
       const isMobileOrTab = window.innerWidth < 1024;
@@ -41,9 +50,28 @@ const JobDetails = () => {
       window.removeEventListener("resize", handleScrollLock);
     };
   }, [selectedJob]);
+  useEffect(() => {
+    if (applyStatus === "applied") {
+      toast.success("Application submitted successfully!");
+    }
+    if (applyStatus === "error" && applyError) {
+      toast.error(applyError);
+    }
+  }, [applyStatus, applyError]);
+  useEffect(() => {
+    dispatch(resetApplyStatus());
+  }, [job?._id]);
+  const handleApply = async () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
+    dispatch(applyToJob({ jobId: job._id }));
+  };
   return (
     <section
-      className={`fixed w-full h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:px-2 md:py-2 top-0 left-0 `}
+      className={`fixed w-full  h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:p-2 top-0 left-0 `}
     >
       {job && (
         <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">
@@ -94,18 +122,35 @@ const JobDetails = () => {
                   {job.salary}
                 </span>
               </div>
-              <div className="flex gap-2 items-center">
-                <span className="flex gap-1 text-xs items-center">
-                  {getRelativeTime(job.createdAt)}
-                </span>
-              </div>
             </div>
             <div className="flex items-center gap-5 mt-2">
-              <button
-                className={`  ${currentUser?.userType === "employer" ? "hidden" : "block"}  px-8 py-2 text-white bg-[#4485fd] rounded-3xl`}
-              >
-                Apply
-              </button>
+              {job?.applyLink ?
+                <a
+                  href={job.applyLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex gap-2 items-center px-8 py-2 text-white bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl"
+                >
+                  Apply <MdArrowOutward />
+                </a>
+              : <button
+                  onClick={handleApply}
+                  disabled={
+                    applyStatus === "loading" || applyStatus === "applied"
+                  }
+                  className={`flex gap-2 items-center px-8 py-2 text-white rounded-3xl transition-all
+          ${
+            applyStatus === "applied" ? "bg-green-500 cursor-not-allowed"
+            : applyStatus === "loading" ? "bg-blue-300 cursor-wait"
+            : "bg-linear-to-r from-indigo-500 via-[#6c00ff] to-[#8c00ff] cursor-pointer hover:scale-105 hover:shadow-[0_10px_40px_rgba(0,0,0,0.18)] transition duration-300 ease-in-out"
+          }`}
+                >
+                  {applyStatus === "loading" && "Applying..."}
+                  {applyStatus === "applied" && "✓ Applied"}
+                  {applyStatus === "error" && "Retry"}
+                  {applyStatus === "idle" && "Apply"}
+                </button>
+              }
               <span
                 className={` ${currentUser?.userType === "employer" ? "hidden" : "block"}  flex items-center cursor-pointer gap-1 text-sm text-gray-500 tracking-wider`}
               >
@@ -114,7 +159,9 @@ const JobDetails = () => {
                   Save
                 </label>
               </span>
-              <span className="text-xs text-gray-500">{job.posted}</span>
+              <span className="flex gap-1 text-xs items-center">
+                {getRelativeTime(job.createdAt)}
+              </span>
             </div>
           </div>
           <hr className="border-t border-gray-100" />

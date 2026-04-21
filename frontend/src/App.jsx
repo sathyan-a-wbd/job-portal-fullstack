@@ -31,6 +31,7 @@ import { getMyJobs } from "./redux/jobs/jobSlice";
 import { Toaster } from "react-hot-toast";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Applicants from "./pages/Applicants";
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
 
@@ -56,7 +57,7 @@ export default function App() {
 
   return (
     <>
-      <GlobalLoader />
+      {/* <GlobalLoader /> */}
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route element={<MainLayout />}>
@@ -97,11 +98,20 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/post-job"
             element={
               <ProtectedRoute>
                 <EmpJobPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/applicants/:jobId"
+            element={
+              <ProtectedRoute>
+                <Applicants />
               </ProtectedRoute>
             }
           />

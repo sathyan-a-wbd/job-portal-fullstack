@@ -20,6 +20,7 @@ const EmpJobPost = () => {
     employmentType: "",
     roleCategory: "",
     skills: "",
+    applyLink: "",
     responsibilities: "",
   });
 
@@ -40,7 +41,6 @@ const EmpJobPost = () => {
         .split(",")
         .map((r) => r.trim()),
     };
-
     const res = await dispatch(createJob(payload));
 
     if (createJob.fulfilled.match(res)) {
@@ -194,7 +194,19 @@ const EmpJobPost = () => {
             placeholder="Build UI, Develop APIs"
           />
         </div>
-
+        <div className="flex flex-col gap-1">
+          <label className="label">
+            Apply Link <span>(Optional)</span>
+          </label>
+          <input
+            name="applyLink"
+            value={formData.applyLink}
+            onChange={handleChange}
+            className="input"
+            placeholder="Leave empty to use default jobist apply feature
+            "
+          />
+        </div>
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 mt-3">
           <button

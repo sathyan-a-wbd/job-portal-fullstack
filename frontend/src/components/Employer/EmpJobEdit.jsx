@@ -56,7 +56,7 @@ const EmpJobEdit = () => {
     <section className="w-full min-h-screen flex items-center justify-center py-10">
       <form
         onSubmit={handleSubmit}
-        className="w-[95%] max-w-3xl bg-white rounded-3xl shadow-lg ring-1 ring-[#bcd4e6]/50 px-6 py-6 flex flex-col gap-4"
+        className="w-full sm:w-[95%] sm:max-w-3xl bg-white rounded-3xl shadow-lg ring-1 ring-[#bcd4e6]/50 px-6 py-6 flex flex-col gap-4"
       >
         <Link to={"/"}>
           <FaArrowLeftLong />

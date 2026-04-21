@@ -11,7 +11,7 @@ const EmpJobActions = () => {
 
   const type = searchParams.get("type");
   return (
-    <section className="px-4 py-4 ">
+    <section className="px-1 sm:px-4 py-4 ">
       {type === "view" && <JobDetails />}
       {type === "edit" && <EmpJobEdit />}
     </section>

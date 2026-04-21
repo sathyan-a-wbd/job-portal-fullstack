@@ -140,7 +140,7 @@ router.put(
       //  USER FIELDS
       const { fname, mail, mobile } = req.body;
       let profileImage = req.body.profileImage;
-      console.log("REQ FILE:", req.file);
+
       // if (req.file) {
       //   profileImage = req.file.path;
       // }

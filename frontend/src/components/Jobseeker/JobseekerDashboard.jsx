@@ -50,8 +50,8 @@ const JobseekerDashboard = () => {
     }, 1000);
   };
   return (
-    <section className="w-full px-6 justify-center roboto flex my-5 ">
-      <div className="flex flex-col w-150 max-w-150  justify-center gap-5">
+    <section className="w-full px-6 justify-center poppins flex my-5 ">
+      <div className="flex flex-col w-full sm:w-150 max-w-150  justify-center gap-5">
         {/* name && profileimage */}
         <div className="flex items-center w-full justify-between rounded-xl shadow-lg p-5">
           <h3 className="text-2xl tracking-widest text-gray-700 font-semibold">

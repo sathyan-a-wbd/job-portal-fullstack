@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Jobcard from "../Jobcard";
 import { useDispatch, useSelector } from "react-redux";
-import TrailJobcard from "../TrailJobCard";
 import { IoSearch } from "react-icons/io5";
 import { MdDelete, MdEdit, MdOutlinePreview } from "react-icons/md";
 import JobDetails from "../../pages/JobDetails";
 import { toast } from "react-hot-toast";
 import { deleteJob, getMyJobs } from "../../redux/jobs/jobSlice";
+import { getApplicants } from "../../redux/applicants/applicants";
 
 const EmpDetails = () => {
   const dispatch = useDispatch();
@@ -23,8 +23,10 @@ const EmpDetails = () => {
   }, [dispatch]);
 
   const { jobs = [] } = useSelector((state) => state.jobs);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [active, setActive] = useState("posted");
+  const active = searchParams.get("tab") || "posted";
+
   const tabs = ["posted", "application", "extra"];
   const [search, setSearch] = useState("");
   const handleDelete = async (id) => {
@@ -63,7 +65,9 @@ const EmpDetails = () => {
             {tabs.map((tab) => (
               <div
                 key={tab}
-                onClick={() => setActive(tab)}
+                onClick={() => {
+                  setSearchParams({ tab });
+                }}
                 className={`relative px-5 py-2 poppins text-xs cursor-pointer border-t capitalize transition-all
               ${
                 active === tab ?
@@ -112,7 +116,7 @@ const EmpDetails = () => {
         <div className="px-6 py-2 w-full max-h-screen overflow-y-scroll custom-scroll">
           {jobs.length === 0 && <p>No jobs found</p>}
           {active === "posted" && (
-            <div className={` grid grid-cols-1 md:grid-cols-2 gap-8 relative`}>
+            <div className={` grid grid-cols-1 lg:grid-cols-2 gap-8 relative`}>
               {filteredJobs?.map((job) => (
                 <div key={job._id}>
                   <div className="w-full mb-0.5 flex items-center justify-end px-6">
@@ -170,6 +174,27 @@ const EmpDetails = () => {
                     </div>
                   </div>
                   <Jobcard jobDetails={job} />
+                </div>
+              ))}
+            </div>
+          )}
+          {active === "application" && (
+            <div className=" grid grid-cols-1 lg:grid-cols-2 gap-8 relative overflow-y-scroll">
+              {filteredJobs.map((job, index) => (
+                <div
+                  key={job._id}
+                  className="rounded-xl border-blue-300 border shadow- p-5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{index + 1}</span>
+                    <h3>{job?.title}</h3>
+                    <Link
+                      to={`/applicants/${job._id}`}
+                      className="text-sm bg-linear-to-r from-indigo-500 via-[#6c00ff] to-[#8c00ff] hover:shadow-[0_10px_40px_rgba(0,0,0,0.18)] transition duration-300 ease-in-out text-white rounded-lg px-6 py-2"
+                    >
+                      View Applicants
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>
