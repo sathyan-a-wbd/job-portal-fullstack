@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
 const authMiddleware = require("../middleware/authMiddleware");
-const upload = require("../middleware/uploadResume");
+const upload = require("../middleware/multer");
 const { updateResume, deleteResume } = require("../controllers/userController");
 
 // ✅ Register
@@ -62,7 +62,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// ✅ Login
 router.post("/login", async (req, res) => {
   try {
     const { identifier, password } = req.body;

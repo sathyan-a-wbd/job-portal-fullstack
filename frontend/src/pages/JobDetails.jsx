@@ -27,7 +27,10 @@ const JobDetails = ({ defaultJob }) => {
   const userType = currentUser?.userType;
   const jobId = searchParams.get("job_id");
   const dispatch = useDispatch();
-  const job = jobs.find((j) => j._id.toString() === jobId) || defaultJob;
+  const job =
+    Array.isArray(jobs) ?
+      jobs.find((j) => j._id.toString() === jobId) || defaultJob
+    : [];
   const { selectedJob, applyStatus, applyError } = useSelector(
     (state) => state.jobs,
   );
@@ -129,7 +132,7 @@ const JobDetails = ({ defaultJob }) => {
                   href={job.applyLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex gap-2 items-center px-8 py-2 text-white bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl"
+                  className={` ${currentUser?.userType === "employer" ? "hidden" : "flex"} flex gap-2 items-center px-8 py-2 text-white bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl`}
                 >
                   Apply <MdArrowOutward />
                 </a>
@@ -138,7 +141,7 @@ const JobDetails = ({ defaultJob }) => {
                   disabled={
                     applyStatus === "loading" || applyStatus === "applied"
                   }
-                  className={`flex gap-2 items-center px-8 py-2 text-white rounded-3xl transition-all
+                  className={`${currentUser?.userType === "employer" ? "hidden" : "flex"} flex gap-2 items-center px-8 py-2 text-white rounded-3xl transition-all
           ${
             applyStatus === "applied" ? "bg-green-500 cursor-not-allowed"
             : applyStatus === "loading" ? "bg-blue-300 cursor-wait"
@@ -186,7 +189,7 @@ const JobDetails = ({ defaultJob }) => {
               <h3 className="text-[16px] font-semibold text-gray-700">
                 Key Responsibilities:
               </h3>
-              {job.responsibilities.map((responsibility, index) => (
+              {job?.responsibilities?.map((responsibility, index) => (
                 <li
                   key={index}
                   className=" list-none flex px-5 gap-1 text-sm items-center inter text-gray-600"
@@ -235,7 +238,7 @@ const JobDetails = ({ defaultJob }) => {
               Key Skills
             </h3>
             <div>
-              {job.skills.map((skill, index) => (
+              {job?.skills?.map((skill, index) => (
                 <span
                   key={index}
                   className="inline-block tracking-wider bg-[#4485fd]/20 text-[#4485fd] text-xs font-medium px-3 py-1 rounded-full mr-2 mb-2"

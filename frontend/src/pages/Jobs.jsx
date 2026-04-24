@@ -25,22 +25,27 @@ const Jobs = () => {
   const displayJob = selectedJob || jobs[0];
   const searchedJobs = useSelector((state) => state.jobs.searchedJobs);
 
-  const filteredJobs = jobs.filter((job) => {
-    const queryTitle = searchedJobs?.jobTitle?.toLowerCase() || "";
-    const queryLocation = searchedJobs?.location?.toLowerCase() || "";
+  const filteredJobs =
+    Array.isArray(jobs) ?
+      jobs.filter((job) => {
+        const queryTitle = searchedJobs?.jobTitle?.toLowerCase() || "";
+        const queryLocation = searchedJobs?.location?.toLowerCase() || "";
 
-    const matchesTitle =
-      job?.title?.toLowerCase().includes(queryTitle) ||
-      job?.companyName?.toLowerCase().includes(queryTitle) ||
-      job?.description?.toLowerCase().includes(queryTitle) ||
-      job?.skills?.some((skill) => skill.toLowerCase().includes(queryTitle));
+        const matchesTitle =
+          job?.title?.toLowerCase().includes(queryTitle) ||
+          job?.companyName?.toLowerCase().includes(queryTitle) ||
+          job?.description?.toLowerCase().includes(queryTitle) ||
+          job?.skills?.some((skill) =>
+            skill.toLowerCase().includes(queryTitle),
+          );
 
-    const matchesLocation = job?.location
-      ?.toLowerCase()
-      .includes(queryLocation);
+        const matchesLocation = job?.location
+          ?.toLowerCase()
+          .includes(queryLocation);
 
-    return matchesTitle && matchesLocation;
-  });
+        return matchesTitle && matchesLocation;
+      })
+    : [];
   const id = searchParams.get("job_id");
   return (
     <section className="grid grid-cols-1 items-center w-full gap-10 px-0 md:px-10 ">

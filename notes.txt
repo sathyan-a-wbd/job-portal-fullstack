@@ -1,0 +1,13 @@
+"availabilty educations experience location resume skills fname mail mobile"
+
+
+
+test profilea{
+"Jobseeker"
+    email: sathyasathya@gmail.com
+    password:123456789
+
+"Employer"
+    email: employer@gmail.com,
+    password:employer123
+}

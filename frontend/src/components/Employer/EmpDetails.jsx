@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Jobcard from "../Jobcard";
 import { useDispatch, useSelector } from "react-redux";
 import { IoSearch } from "react-icons/io5";
@@ -7,7 +7,6 @@ import { MdDelete, MdEdit, MdOutlinePreview } from "react-icons/md";
 import JobDetails from "../../pages/JobDetails";
 import { toast } from "react-hot-toast";
 import { deleteJob, getMyJobs } from "../../redux/jobs/jobSlice";
-import { getApplicants } from "../../redux/applicants/applicants";
 
 const EmpDetails = () => {
   const dispatch = useDispatch();
@@ -37,23 +36,25 @@ const EmpDetails = () => {
     if (confirmDelete) {
       try {
         await dispatch(deleteJob(id)).unwrap();
-        await dispatch(getMyJobs()).unwrap();
+
         toast.success("Job Deleted");
       } catch (err) {
-        toast.error("Failed to delete job", err);
+        toast.error(err);
       }
     }
   };
-  const filteredJobs = jobs.filter((job) => {
-    const query = search.toLowerCase();
-
-    return (
-      job.title?.toLowerCase().includes(query) ||
-      job.description?.toLowerCase().includes(query) ||
-      job.location?.toLowerCase().includes(query) ||
-      job.companyName?.toLowerCase().includes(query)
-    );
-  });
+  const filteredJobs =
+    Array.isArray(jobs) ?
+      jobs.filter((job) => {
+        const query = search.toLowerCase();
+        return (
+          job.title?.toLowerCase().includes(query) ||
+          job.description?.toLowerCase().includes(query) ||
+          job.location?.toLowerCase().includes(query) ||
+          job.companyName?.toLowerCase().includes(query)
+        );
+      })
+    : [];
   // const handleSearchJobs = () => {};
   return (
     <section className=" poppins grid grid-cols-1 items-center w-full gap-10 px-0 md:px-10 ">

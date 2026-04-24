@@ -73,7 +73,6 @@ const userSchema = new Schema(
     mobile: { type: String, default: "" },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
-    
   },
   { timestamps: true },
 );
@@ -124,6 +123,9 @@ const jobseekerSchema = new Schema({
   resumeName: {
     type: String,
     default: "",
+  },
+  resumePublicId: {
+    type: String,
   },
 });
 const User = mongoose.model("User", userSchema);

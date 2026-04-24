@@ -11,6 +11,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 //Layouts
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
+
 // Components & Pages
 
 import Home from "./pages/Home";

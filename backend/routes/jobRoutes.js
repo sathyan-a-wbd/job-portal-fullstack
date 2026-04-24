@@ -38,14 +38,27 @@ router.get("/all-jobs", async (req, res) => {
   }
 });
 
+const mongoose = require("mongoose"); // Ensure mongoose is imported at the top
+
 router.get("/my-jobs", authMiddleware, async (req, res) => {
   try {
-    const jobs = await Job.find({ createdBy: req.userId }).sort({
+    if (!req.userId) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: No user ID found" });
+    }
+
+    const jobs = await Job.find({
+      createdBy: new mongoose.Types.ObjectId(req.userId),
+    }).sort({
       createdAt: -1,
     });
 
+    console.log(`Found ${jobs.length} jobs for user ${req.userId}`);
+
     res.json(jobs);
   } catch (error) {
+    console.error("Error fetching jobs:", error);
     res.status(500).json({ message: error.message });
   }
 });

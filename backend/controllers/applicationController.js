@@ -122,6 +122,34 @@ const getApplicants = async (req, res) => {
   }
 };
 
+//get /api/applicants/:userId
+
+const getEachApp = async (req, res) => {
+  try {
+    if (req.userRole !== "employer") {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const { userId } = req.params;
+    const user = await User.findOne({ _id: userId })
+      .select("fname mail mobile -_id")
+      .lean();
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const fulldetails = await Jobseeker.findOne({ userId })
+      .select("availabilty educations experience location resume skills")
+      .lean();
+    const profile = {
+      ...user,
+      ...(fulldetails || {}),
+    };
+    res.status(200).json(profile);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // PATCH /api/applications/:id/status  → employer updates status
 const updateApplicationStatus = async (req, res) => {
   try {
@@ -158,5 +186,6 @@ module.exports = {
   applyToJob,
   getMyApplications,
   getApplicants,
+  getEachApp,
   updateApplicationStatus,
 };
