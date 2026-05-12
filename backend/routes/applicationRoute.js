@@ -11,7 +11,6 @@ const router = express.Router();
 
 router.post("/jobs/:jobId/apply", authMiddleware, applyToJob);
 router.get("/applications/myapplications", authMiddleware, getMyApplications);
-// router.get("/applications/job/:jobId", authMiddleware, getJobApplicants);
 router.get("/applications/job/:jobId", authMiddleware, getApplicants);
 router.get("/applicants/:userId", authMiddleware, getEachApp);
 router.patch(

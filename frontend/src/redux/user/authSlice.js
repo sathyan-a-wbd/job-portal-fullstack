@@ -30,6 +30,7 @@ export const getProfile = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await API.get("/api/users/profile");
+      console.log("PROFILE RESPONSE:", res.data); 
       return res.data;
     } catch (err) {
       if (err.response?.status === 401) {
@@ -60,16 +61,22 @@ export const uploadResume = createAsyncThunk(
       formData.append("resume", file);
 
       const res = await API.put("/api/users/resume", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data);
+     console.log("FULL ERROR:", err);
+  console.log("ERROR RESPONSE:", err.response?.data);
+  return thunkAPI.rejectWithValue(
+    err.response?.data?.message || "Upload failed"
+  );
     }
-  },
+  }
 );
-//  DELETE RESUME
+
 export const deleteResume = createAsyncThunk(
   "auth/deleteResume",
   async (_, thunkAPI) => {
@@ -77,9 +84,11 @@ export const deleteResume = createAsyncThunk(
       const res = await API.delete("/api/users/resume");
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data);
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Delete failed"
+      );
     }
-  },
+  }
 );
 //  AI SUMMARY
 export const generateSummary = createAsyncThunk(
@@ -111,11 +120,12 @@ const authSlice = createSlice({
     token: localStorage.getItem("token") || null,
     loading: false,
     error: null,
+   
     summary: null,
   },
   reducers: {
     logout: (state) => {
-      state.user = null;
+      state.currentUser = null;
       state.token = null;
       localStorage.removeItem("token");
     },
@@ -191,32 +201,38 @@ const authSlice = createSlice({
       //Upload resume
       .addCase(uploadResume.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
+     .addCase(uploadResume.fulfilled, (state, action) => {
+  state.loading = false;
+
+  if (state.currentUser) {
+    state.currentUser.resume = action.payload.resume;
+    state.currentUser.resumeName = action.payload.resumeName;
+    state.currentUser.resumePublicId = action.payload.resumePublicId;
+  }
+})
       .addCase(uploadResume.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(uploadResume.fulfilled, (state, action) => {
-        state.loading = false;
 
-        if (state.currentUser) {
-          state.currentUser.resume = action.payload.resume;
-          state.currentUser.resumeName = action.payload.resumeName;
-        }
-      })
-      //Delete resume
       .addCase(deleteResume.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
+      .addCase(deleteResume.fulfilled, (state) => {
+  state.loading = false;
+
+  if (state.currentUser) {
+    state.currentUser.resume = "";
+    state.currentUser.resumeName = "";
+    state.currentUser.resumePublicId = "";
+  }
+})
       .addCase(deleteResume.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
-      .addCase(deleteResume.fulfilled, (state) => {
-        if (state.currentUser) {
-          state.currentUser.resume = "";
-          state.currentUser.resumeName = "";
-        }
       });
   },
 });

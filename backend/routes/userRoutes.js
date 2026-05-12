@@ -6,8 +6,11 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
 const authMiddleware = require("../middleware/authMiddleware");
-const upload = require("../middleware/multer");
-const { updateResume, deleteResume } = require("../controllers/userController");
+const upload = require("../middleware/uploadMiddleware");
+const {
+  updateResume,
+  deleteResume,
+} = require("../controllers/resumeController");
 
 // ✅ Register
 router.post("/register", async (req, res) => {
@@ -235,9 +238,16 @@ router.put(
     }
   },
 );
-router.put("/resume", authMiddleware, upload.single("resume"), updateResume);
+router.put("/resume", authMiddleware, (req, res, next) => {
+  upload.single("resume")(req, res, (err) => {
+    if (err) {
+      console.log("MULTER ERROR:", err); // ← இந்த log பாருங்க
+      return res.status(400).json({ message: err.message });
+    }
+    next();
+  });
+}, updateResume);
 router.delete("/resume", authMiddleware, deleteResume);
-
 router.post("/forgot-password", async (req, res) => {
   try {
     console.log("Received forgot password request for email:", req.body.email);
@@ -355,4 +365,4 @@ router.post("/reset-password/:token", async (req, res) => {
   }
 });
 module.exports = router;
-// tpqx vokf stun wkxm
+

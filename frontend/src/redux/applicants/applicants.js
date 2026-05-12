@@ -5,8 +5,8 @@ export const getApplicants = createAsyncThunk(
   "applicant/getApplicants",
   async (jobId, thunkAPI) => {
     try {
-      console.log(jobId);
       const res = await API.get(`/api/applications/job/${jobId}`);
+
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -19,7 +19,6 @@ export const getEachApp = createAsyncThunk(
   "applicant/getEachApp",
   async (userId, thunkAPI) => {
     try {
-      console.log(userId);
       const res = await API.get(`/api/applicants/${userId}`);
       return res.data;
     } catch (error) {
@@ -29,7 +28,21 @@ export const getEachApp = createAsyncThunk(
     }
   },
 );
-
+export const updateAppStatus = createAsyncThunk(
+  "applicant/updateAppStatus",
+  async ({ appId, status }, thunkAPI) => {
+    try {
+      const res = await API.patch(`/api/applications/${appId}/status`, {
+        status,
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || { message: error.message },
+      );
+    }
+  },
+);
 const initialState = {
   applicants: null,
   currentApp: null,
@@ -62,6 +75,32 @@ const applicantSlice = createSlice({
         state.currentApp = action.payload;
       })
       .addCase(getEachApp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateAppStatus.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateAppStatus.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const { _id, status } = action.payload.application;
+
+        // update applicants list
+        if (state.applicants) {
+          const appIndex = state.applicants.findIndex((app) => app._id === _id);
+
+          if (appIndex !== -1) {
+            state.applicants[appIndex].status = status;
+          }
+        }
+
+        // update current opened applicant
+        if (state.currentApp?.appId === _id) {
+          state.currentApp.status = status;
+        }
+      })
+      .addCase(updateAppStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

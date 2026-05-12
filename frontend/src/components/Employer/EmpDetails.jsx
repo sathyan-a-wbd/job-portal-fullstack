@@ -7,6 +7,7 @@ import { MdDelete, MdEdit, MdOutlinePreview } from "react-icons/md";
 import JobDetails from "../../pages/JobDetails";
 import { toast } from "react-hot-toast";
 import { deleteJob, getMyJobs } from "../../redux/jobs/jobSlice";
+import JobCardSkeleton from "../Loaders/JobCardSkeleton";
 
 const EmpDetails = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const EmpDetails = () => {
     fetchJobs();
   }, [dispatch]);
 
-  const { jobs = [] } = useSelector((state) => state.jobs);
+  const { jobs = [], loading } = useSelector((state) => state.jobs);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const active = searchParams.get("tab") || "posted";
@@ -174,7 +175,11 @@ const EmpDetails = () => {
                       </div>
                     </div>
                   </div>
-                  <Jobcard jobDetails={job} />
+                  {loading ?
+                    Array.from({ length: 6 }).map((_, index) => (
+                      <JobCardSkeleton key={index} />
+                    ))
+                  : <Jobcard jobDetails={job} />}
                 </div>
               ))}
             </div>

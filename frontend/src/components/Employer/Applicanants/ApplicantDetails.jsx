@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   FiX,
   FiMail,
@@ -10,18 +10,31 @@ import {
   FiBookOpen,
 } from "react-icons/fi";
 import { MdSchool } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateAppStatus } from "../../../redux/applicants/applicants";
 
 const ApplicantDetails = ({ isOpen, onClose }) => {
   const currentApp = useSelector((state) => state.applicant.currentApp);
+  const dispatch = useDispatch();
   let applicant = currentApp;
 
+  console.log(applicant);
+  const handleStatusChange = async (e) => {
+    try {
+      await dispatch(
+        updateAppStatus({ appId: applicant.appId, status: e.target.value }),
+      );
+      console.log("successFully updated status");
+    } catch (err) {
+      console.log("Error updating status:", err);
+    }
+  };
   if (!applicant) return null;
   return (
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity z-40 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`fixed  inset-0 bg-black/30 backdrop-blur-sm transition-opacity z-40 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={onClose}
       />
 
@@ -40,7 +53,7 @@ const ApplicantDetails = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <div className="overflow-y-auto h-[calc(100%-70px)] p-6">
+        <div className="overflow-y-auto custom-scroll h-[calc(100%-70px)] p-6">
           {/* Hero Section */}
           <div className="flex flex-col items-center text-center mb-8">
             <div className="h-20 w-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-3xl font-bold mb-4">
@@ -56,14 +69,32 @@ const ApplicantDetails = ({ isOpen, onClose }) => {
           <div className="grid grid-cols-1 gap-4 mb-8 bg-gray-50 p-4 rounded-xl">
             <div className="flex items-center gap-3 text-sm text-gray-600">
               <FiMail className="text-blue-500" />
-              <span>{applicant?.mail}</span>
+              <a
+                href={`mailto:${applicant?.mail}`}
+                className="hover:underline cursor-pointer"
+              >
+                {applicant?.mail}
+              </a>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-600">
               <FiMapPin className="text-blue-500" />
               <span>{applicant?.location || "Chennai, TN"}</span>
             </div>
           </div>
-
+          {/* Summary Section */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <FiBriefcase className="text-gray-400" />
+              <h3 className="font-bold text-gray-800 uppercase tracking-wider text-xs">
+                Profile summary
+              </h3>
+            </div>
+            <div className="border-l-2 border-blue-100 pl-4 space-y-4">
+              <p className="text-sm text-gray-600 mt-1">
+                {applicant?.profileSummary || "N/A"}
+              </p>
+            </div>
+          </div>
           {/* Experience Section */}
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
@@ -73,8 +104,8 @@ const ApplicantDetails = ({ isOpen, onClose }) => {
               </h3>
             </div>
             <div className="border-l-2 border-blue-100 pl-4 space-y-4">
-              {applicant?.experience?.map((exp) => (
-                <div>
+              {applicant?.experience?.map((exp, index) => (
+                <div key={index}>
                   <h4 className="font-bold text-sm">{exp?.role}</h4>
                   <p className="text-xs text-gray-500">
                     {exp?.company} {exp?.duration?.join(" - ")}
@@ -95,8 +126,8 @@ const ApplicantDetails = ({ isOpen, onClose }) => {
             </div>
 
             <div className="border-l-2 border-blue-100 pl-4 space-y-4">
-              {applicant?.educations?.map((edu) => (
-                <div>
+              {applicant?.educations?.map((edu, i) => (
+                <div key={i}>
                   <h4 className="font-bold text-sm">{edu?.courseName}</h4>
                   <p className="text-xs text-gray-500">
                     {edu?.collegeName} - {edu?.duration?.join(" - ")}
@@ -127,7 +158,7 @@ const ApplicantDetails = ({ isOpen, onClose }) => {
           </div>
 
           {/* Footer Actions */}
-          <div className="flex gap-4 mt-10">
+          <div className="flex  gap-4 mt-10">
             <a
               href={applicant?.resume}
               target="_blank"
@@ -135,6 +166,17 @@ const ApplicantDetails = ({ isOpen, onClose }) => {
             >
               <FiDownload /> Download Resume
             </a>
+
+            <select
+              className="border bg-amber-50 text-amber-600 border-amber-200 rounded-md px-3 py-2 text-sm focus:outline-none"
+              value={applicant?.status || "pending"}
+              onChange={handleStatusChange}
+            >
+              <option value="pending">Pending</option>
+              <option value="reviewed">Reviewed</option>
+              <option value="shortlisted">Shortlisted</option>
+              <option value="rejected">Rejected</option>
+            </select>
           </div>
         </div>
       </div>

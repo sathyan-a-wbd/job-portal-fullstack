@@ -7,7 +7,7 @@ import { MdBookmarkBorder } from "react-icons/md";
 
 import { LiaWalletSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedJob } from "../redux/jobs/jobSlice";
+import { saveJob, setSelectedJob } from "../redux/jobs/jobSlice";
 import { getRelativeTime } from "../utils/getRelativeTIme";
 
 const Jobcard = ({ jobDetails }) => {
@@ -17,6 +17,14 @@ const Jobcard = ({ jobDetails }) => {
   const dispatch = useDispatch();
   const userType = currentUser?.userType;
   const job = jobDetails;
+  const handleSave = async (id) => {
+    try {
+      await dispatch(saveJob(id)).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!job) return null;
   return (
     <div className="bg-white ">
@@ -85,11 +93,12 @@ transition-all duration-300 overflow-hidden"
               <span className="text-xs sm:text-sm text-gray-500">
                 {getRelativeTime(job.createdAt)}
               </span>
-              <span
+              <button
+                onClick={() => handleSave(job._id)}
                 className={`flex items-center ${userType === "employer" ? "hidden" : "block"} gap-1 text-sm text-gray-500 tracking-wider`}
               >
-                <MdBookmarkBorder size={20} /> Save
-              </span>
+                <MdBookmarkBorder size={20} /> {job.saved ? "Saved" : "Save"}
+              </button>
             </div>
           </div>
         </Link>

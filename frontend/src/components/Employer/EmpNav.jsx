@@ -12,7 +12,6 @@ import { CiSquarePlus } from "react-icons/ci";
 import { LuPlus } from "react-icons/lu";
 
 const EmpNav = () => {
-  const [notification, setNotification] = useState(10);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
 
@@ -58,7 +57,7 @@ const EmpNav = () => {
               </Link>
               <Link
                 onClick={() => setMobileNav(false)}
-                className="flex hover:bg-gray-200 items-center hover:shadow-md uppercase justify-center gap-2 ring-1 ring-[#4485fd] rounded-full px-3 py-2"
+                className="flex hover:bg-gray-200 items-center hover:shadow-md uppercase justify-center gap-2 ring-1 ring-[#4485fd] rounded-sm px-3 py-2"
                 to={"/post-job"}
               >
                 <LuPlus size={18} /> Post a job
@@ -85,27 +84,17 @@ const EmpNav = () => {
             <li className="hover:text-[#6ca0dc] inter text-sm transition-all duration-300 ease-in-out">
               <Link to={"/"}>Dashboard</Link>
             </li>
-            <li className="text-[#6ca0dc]  inter text-sm transition-all duration-300 ease-in-out">
+            <li className="text-[#6ca0dc] inter text-sm transition-all duration-300 ease-in-out">
               <Link
                 to={"/post-job"}
-                className="flex hover:bg-gray-200 items-center hover:shadow-md uppercase justify-center gap-2 ring-1 ring-[#4485fd] rounded-full px-3 py-2"
+                className="flex hover:shadow-md uppercase justify-center items-center gap-2 ring-1 translate-y-0 hover:-translate-y-1 ring-white/70 text-black hover:text-[#4485fd] transition-all duration-200 ease-in-out hover:ring-[#4485fd] rounded-md px-3 py-2"
               >
                 {" "}
-                <LuPlus size={18} /> Post a job
+                {/* <LuPlus size={18} />  */}
+                Post a job
               </Link>
             </li>
-            <Link
-              to={"/notifications"}
-              className={`cursor-pointer relative  inline-block `}
-            >
-              <FaRegBell className="text-xl text-shadow " />
-              {notification === 0 ?
-                ""
-              : <span className=" text-[8px] text-white absolute w-5 h-5 -top-3 -right-2 rounded-[50%] flex items-center justify-center bg-amber-500">
-                  {notification}
-                </span>
-              }
-            </Link>
+
             <div className="hidden items-center justify-center relative sm:flex">
               <FaUserAlt
                 className="text-xl text-shadow cursor-pointer"

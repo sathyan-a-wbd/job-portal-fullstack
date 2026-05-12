@@ -58,7 +58,7 @@ export default function App() {
 
   return (
     <>
-      <GlobalLoader />
+      {/* <GlobalLoader /> */}
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route element={<MainLayout />}>

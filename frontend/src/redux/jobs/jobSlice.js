@@ -19,7 +19,7 @@ export const getMyJobs = createAsyncThunk(
   "job/getMyJobs",
   async (_, thunkAPI) => {
     try {
-      const res = await API.get("/api/jobs/my-jobs");
+      const res = await API.get("/api/jobs/my-jobs-employer");
 
       return res.data;
     } catch (error) {
@@ -31,9 +31,10 @@ export const getMyJobs = createAsyncThunk(
 );
 export const getAllJobs = createAsyncThunk(
   "job/getAllJobs",
-  async (_, thunkAPI) => {
+  async (page = 1, thunkAPI) => {
     try {
-      const res = await API.get("/api/jobs/all-jobs");
+      const res = await API.get(`/api/jobs/all-jobs?page=${page}&limit=10`);
+
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -81,6 +82,24 @@ export const deleteJob = createAsyncThunk(
     }
   },
 );
+export const saveJob = createAsyncThunk(
+  "jobs/saveJob",
+  async (jobId, thunkAPI) => {
+    try {
+      const res = await API.post(
+        `/api/jobs/save/${jobId}`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
 const initialState = {
   jobs: [],
   searchedJobs: { jobTitle: "", location: "" },
@@ -89,6 +108,11 @@ const initialState = {
   applyStatus: "idle",
   applyError: null,
   selectedJob: false,
+
+  // PAGINATION
+  currentPage: 1,
+  totalPages: 1,
+  hasNextPage: false,
 };
 
 const jobSlice = createSlice({
@@ -136,10 +160,25 @@ const jobSlice = createSlice({
       .addCase(getAllJobs.pending, (state) => {
         state.loading = true;
       })
+
       .addCase(getAllJobs.fulfilled, (state, action) => {
         state.loading = false;
-        state.jobs = action.payload;
+
+        // First page → replace jobs
+        if (action.payload.pagination.currentPage === 1) {
+          state.jobs = action.payload.jobs;
+        } else {
+          // Next pages → append jobs
+          state.jobs = [...state.jobs, ...action.payload.jobs];
+        }
+
+        state.currentPage = action.payload.pagination.currentPage;
+
+        state.totalPages = action.payload.pagination.totalPages;
+
+        state.hasNextPage = action.payload.pagination.hasNextPage;
       })
+
       .addCase(getAllJobs.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -177,6 +216,19 @@ const jobSlice = createSlice({
       .addCase(applyToJob.rejected, (state, action) => {
         state.applyStatus = "error";
         state.applyError = action.payload;
+      })
+      .addCase(saveJob.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(saveJob.fulfilled, (state, action) => {
+        state.loading = false;
+        state.jobs = state.jobs.map((job) =>
+          job._id === action.payload.job ? { ...job, saved: true } : job,
+        );
+      })
+      .addCase(saveJob.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

@@ -3,6 +3,8 @@ const router = express.Router();
 const Job = require("../models/jobModel");
 const { User, Employer } = require("../models/userModel");
 const authMiddleware = require("../middleware/authMiddleware");
+
+const mongoose = require("mongoose");
 router.post("/create-job", authMiddleware, async (req, res) => {
   try {
     if (req.userRole !== "employer") {
@@ -28,24 +30,48 @@ router.post("/create-job", authMiddleware, async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
-
 router.get("/all-jobs", async (req, res) => {
   try {
-    const jobs = await Job.find().populate("createdBy", "name email");
-    res.json(jobs);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const skip = (page - 1) * limit;
+
+    const totalJobs = await Job.countDocuments();
+
+    const jobs = await Job.find()
+      .populate("createdBy", "name email")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    res.status(200).json({
+      jobs,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalJobs / limit),
+        hasNextPage: page < Math.ceil(totalJobs / limit),
+      },
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 });
 
-const mongoose = require("mongoose"); // Ensure mongoose is imported at the top
-
-router.get("/my-jobs", authMiddleware, async (req, res) => {
+router.get("/my-jobs-employer", authMiddleware, async (req, res) => {
   try {
     if (!req.userId) {
       return res
         .status(401)
         .json({ message: "Unauthorized: No user ID found" });
+    }
+    if (req.userRole !== "employer") {
+      return res
+        .status(403)
+        .json({ message: "Only employers can Access this resource" });
     }
 
     const jobs = await Job.find({
@@ -53,8 +79,6 @@ router.get("/my-jobs", authMiddleware, async (req, res) => {
     }).sort({
       createdAt: -1,
     });
-
-    console.log(`Found ${jobs.length} jobs for user ${req.userId}`);
 
     res.json(jobs);
   } catch (error) {

@@ -74,7 +74,7 @@ const ApplicantView = ({ app, onViewDetails }) => {
               Experience
             </span>
             <span className="font-semibold text-gray-800 leading-none">
-              {app.experience || "Freshman"}
+              {user.experience || "Fresher"}
             </span>
           </div>
         </div>

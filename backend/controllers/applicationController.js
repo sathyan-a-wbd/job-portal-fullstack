@@ -1,4 +1,3 @@
-const Applications = require("../models/Applications");
 const Application = require("../models/Applications");
 const Job = require("../models/jobModel");
 const { User, Jobseeker, Employer } = require("../models/userModel");
@@ -58,7 +57,7 @@ const getMyApplications = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
+// api/applications/job/${jobId}
 const getApplicants = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -79,10 +78,9 @@ const getApplicants = async (req, res) => {
       });
     }
 
-    const applications = await Application.find({ job: jobId }).populate(
-      "applicant",
-      "fname mail",
-    );
+    const applications = await Application.find({ job: jobId })
+      .populate("applicant", "fname mail")
+      .populate("job", "title");
 
     const validApplications = applications.filter((app) => app.applicant);
 
@@ -98,7 +96,10 @@ const getApplicants = async (req, res) => {
       );
 
       return {
-        ...app.toObject(),
+        _id: app._id,
+        status: app.status,
+        createdAt: app.createdAt,
+        job: app.job,
         applicant: {
           ...app.applicant.toObject(),
           location: js?.location || "",
@@ -131,6 +132,12 @@ const getEachApp = async (req, res) => {
     }
 
     const { userId } = req.params;
+    const application = await Application.findOne({ applicant: userId }).select(
+      "_id",
+    );
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
     const user = await User.findOne({ _id: userId })
       .select("fname mail mobile -_id")
       .lean();
@@ -138,11 +145,14 @@ const getEachApp = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     const fulldetails = await Jobseeker.findOne({ userId })
-      .select("availabilty educations experience location resume skills")
+      .select(
+        "availabilty educations experience location resume skills profileSummary ",
+      )
       .lean();
     const profile = {
       ...user,
       ...(fulldetails || {}),
+      appId: application._id,
     };
     res.status(200).json(profile);
   } catch (error) {
@@ -150,7 +160,7 @@ const getEachApp = async (req, res) => {
   }
 };
 
-// PATCH /api/applications/:id/status  → employer updates status
+// PATCH /api/applications/:id/status  - employer updates status
 const updateApplicationStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -179,6 +189,7 @@ const updateApplicationStatus = async (req, res) => {
     res.status(200).json({ message: "Status updated", application });
   } catch (err) {
     res.status(500).json({ message: err.message });
+    console.log("Update Staus Error :", err);
   }
 };
 
