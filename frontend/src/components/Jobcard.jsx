@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { PiSuitcaseSimpleLight } from "react-icons/pi";
 import { CiLocationOn } from "react-icons/ci";
 import { LuBookText } from "react-icons/lu";
@@ -13,6 +13,7 @@ import { getRelativeTime } from "../utils/getRelativeTIme";
 const Jobcard = ({ jobDetails }) => {
   const locationUrl = useLocation();
   const { currentUser } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const userType = currentUser?.userType;
@@ -24,6 +25,10 @@ const Jobcard = ({ jobDetails }) => {
     e.preventDefault();
     e.stopPropagation();
     try {
+      if (!currentUser) {
+        navigate("/login");
+        return;
+      }
       if (isSaved) {
         await dispatch(unsaveJob(jobDetails._id)).unwrap();
       } else {

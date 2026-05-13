@@ -80,6 +80,10 @@ const JobDetails = ({ defaultJob }) => {
   const handleSave = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     try {
       if (isSaved) {
         await dispatch(unsaveJob(job._id)).unwrap();

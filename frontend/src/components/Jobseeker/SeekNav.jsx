@@ -67,7 +67,7 @@ const SeekNav = () => {
               <Link
                 onClick={() => {
                   setMobileNav(false);
-                  if (currentUser === null) {
+                  if (!currentUser) {
                     navigate("/login");
                   }
                 }}
