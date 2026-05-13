@@ -47,7 +47,6 @@ const jobSchema = new mongoose.Schema(
       default: "",
     },
     companyName: String,
-    companyLogo: String,
     companyEmail: String,
     employmentType: {
       type: String,

@@ -24,7 +24,7 @@ const Jobcard = ({ jobDetails }) => {
       console.log(error);
     }
   };
-
+  console.log(job._id);
   if (!job) return null;
   return (
     <div className="bg-white ">
@@ -53,14 +53,6 @@ transition-all duration-300 overflow-hidden"
                 <h4 className="text-gray-600 text-[16px] sm:text-[18px] font-medium">
                   {job.companyName}
                 </h4>
-              </div>
-              <div className="w-15 h-15 flex items-center overflow-hidden bg-amber-50 justify-center rounded-3xl ring-1 ring-[#bcd4e6]">
-                {job.companyLogo ?
-                  <img src={job.companyLogo} />
-                : <h3 className="text-5xl text-amber-700 ">
-                    {job?.companyName?.slice(0, 1) || "?"}
-                  </h3>
-                }
               </div>
             </div>
             <div className="flex flex-col gap-2 justifu-center whitespace-nowrap text-gray-600  text-[14px] tracking-wide">

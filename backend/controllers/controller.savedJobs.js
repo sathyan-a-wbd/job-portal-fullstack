@@ -1,7 +1,5 @@
-const SavedJobs = require("../models/SavedJobs");
+const SavedJob = require("../models/model.savedJobs");
 const { Job } = require("../models/jobModel");
-
-const SavedJob = require("../models/SavedJob");
 
 const saveJob = async (req, res) => {
   try {
@@ -78,4 +76,9 @@ const getSavedJobs = async (req, res) => {
       message: err.message,
     });
   }
+};
+module.exports = {
+  saveJob,
+  unsaveJob,
+  getSavedJobs,
 };

@@ -20,7 +20,7 @@ router.post("/create-job", authMiddleware, async (req, res) => {
       ...req.body,
 
       companyName: employer.companyName,
-      companyLogo: employer.profileImage,
+
       companyEmail: employer.companyEmail,
       createdBy: req.userId,
     });

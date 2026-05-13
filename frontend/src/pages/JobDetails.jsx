@@ -99,14 +99,6 @@ const JobDetails = ({ defaultJob }) => {
                 <h2 className="text-[24px] font-semibold">{job.title}</h2>
                 <h4 className="text-gray-600 font-medium">{job.companyName}</h4>
               </div>
-              <div className="w-15 h-15 flex items-center overflow-hidden bg-amber-50 justify-center rounded-3xl ring-1 ring-[#bcd4e6]">
-                {job?.companyLogo ?
-                  <img src={job?.companyLogo} />
-                : <h3 className="text-5xl text-amber-700 ">
-                    {job?.companyName?.slice(0, 1)}
-                  </h3>
-                }
-              </div>
             </div>
             <div className="flex flex-col gap-2 justifu-center whitespace-nowrap text-gray-600  text-[14px] tracking-wide">
               <div className="flex gap-2 items-center">

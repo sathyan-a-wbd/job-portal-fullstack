@@ -33,6 +33,7 @@ import { Toaster } from "react-hot-toast";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Applicants from "./pages/Applicants";
+import SavedJobs from "./pages/SavedJobs";
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
 
@@ -113,6 +114,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Applicants />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/saved-jobs"
+            element={
+              <ProtectedRoute>
+                <SavedJobs />
               </ProtectedRoute>
             }
           />
