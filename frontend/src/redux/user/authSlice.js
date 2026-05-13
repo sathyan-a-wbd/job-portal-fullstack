@@ -30,7 +30,7 @@ export const getProfile = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await API.get("/api/users/profile");
-      console.log("PROFILE RESPONSE:", res.data); 
+
       return res.data;
     } catch (err) {
       if (err.response?.status === 401) {
@@ -68,13 +68,11 @@ export const uploadResume = createAsyncThunk(
 
       return res.data;
     } catch (err) {
-     console.log("FULL ERROR:", err);
-  console.log("ERROR RESPONSE:", err.response?.data);
-  return thunkAPI.rejectWithValue(
-    err.response?.data?.message || "Upload failed"
-  );
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Upload failed",
+      );
     }
-  }
+  },
 );
 
 export const deleteResume = createAsyncThunk(
@@ -85,10 +83,10 @@ export const deleteResume = createAsyncThunk(
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Delete failed"
+        err.response?.data?.message || "Delete failed",
       );
     }
-  }
+  },
 );
 //  AI SUMMARY
 export const generateSummary = createAsyncThunk(
@@ -120,7 +118,7 @@ const authSlice = createSlice({
     token: localStorage.getItem("token") || null,
     loading: false,
     error: null,
-   
+
     summary: null,
   },
   reducers: {
@@ -203,15 +201,15 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-     .addCase(uploadResume.fulfilled, (state, action) => {
-  state.loading = false;
+      .addCase(uploadResume.fulfilled, (state, action) => {
+        state.loading = false;
 
-  if (state.currentUser) {
-    state.currentUser.resume = action.payload.resume;
-    state.currentUser.resumeName = action.payload.resumeName;
-    state.currentUser.resumePublicId = action.payload.resumePublicId;
-  }
-})
+        if (state.currentUser) {
+          state.currentUser.resume = action.payload.resume;
+          state.currentUser.resumeName = action.payload.resumeName;
+          state.currentUser.resumePublicId = action.payload.resumePublicId;
+        }
+      })
       .addCase(uploadResume.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -222,14 +220,14 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteResume.fulfilled, (state) => {
-  state.loading = false;
+        state.loading = false;
 
-  if (state.currentUser) {
-    state.currentUser.resume = "";
-    state.currentUser.resumeName = "";
-    state.currentUser.resumePublicId = "";
-  }
-})
+        if (state.currentUser) {
+          state.currentUser.resume = "";
+          state.currentUser.resumeName = "";
+          state.currentUser.resumePublicId = "";
+        }
+      })
       .addCase(deleteResume.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

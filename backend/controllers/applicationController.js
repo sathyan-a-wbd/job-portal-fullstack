@@ -35,7 +35,7 @@ const applyToJob = async (req, res) => {
       job: jobId,
       applicant: applicantId,
     });
-    console.log(application);
+
     res.status(201).json({
       message: "Application submitted successfully",
       application,
@@ -156,7 +156,7 @@ const getEachApp = async (req, res) => {
     };
     res.status(200).json(profile);
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -189,7 +189,6 @@ const updateApplicationStatus = async (req, res) => {
     res.status(200).json({ message: "Status updated", application });
   } catch (err) {
     res.status(500).json({ message: err.message });
-    console.log("Update Staus Error :", err);
   }
 };
 

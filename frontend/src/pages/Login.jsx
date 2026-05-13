@@ -17,6 +17,10 @@ const Login = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(loginSchema), mode: "onChange" });
 
+  React.useEffect(() => {
+    document.title = "Login - Job Portal";
+  }, []);
+
   const onSubmit = async (data) => {
     try {
       await dispatch(loginUser(data)).unwrap();

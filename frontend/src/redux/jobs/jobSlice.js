@@ -264,7 +264,6 @@ const jobSlice = createSlice({
       .addCase(getSavedJobs.fulfilled, (state, action) => {
         state.loading = false;
         state.savedJobs = action.payload.savedJobs;
-        console.log(action.payload);
       })
       .addCase(getSavedJobs.rejected, (state, action) => {
         state.loading = false;

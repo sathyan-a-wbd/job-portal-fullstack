@@ -72,7 +72,9 @@ const Applicants = () => {
       applicants?.map((app) => app?.applicant?.location).filter(Boolean),
     ),
   ];
-  console.log(applicants);
+  useEffect(() => {
+    document.title = `Applicants }`;
+  }, [applicants]);
   // SHOW EMPTY ONLY AFTER LOADING
   if (!loading && (!applicants || applicants.length === 0)) {
     return (

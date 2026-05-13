@@ -30,7 +30,9 @@ const ResetPassword = () => {
       toast.error(err?.response?.data?.message || "Something went wrong");
     }
   };
-
+  React.useEffect(() => {
+    document.title = "Reset Password - Job Portal";
+  }, []);
   return (
     <section className="h-screen w-full">
       <div className="w-full h-full flex items-center justify-center py-10">

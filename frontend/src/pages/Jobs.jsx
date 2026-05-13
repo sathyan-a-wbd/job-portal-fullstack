@@ -32,6 +32,10 @@ const Jobs = () => {
   const selectedJob = useSelector((state) => state.jobs.selectedJob);
 
   const searchedJobs = useSelector((state) => state.jobs.searchedJobs);
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = "Jobs - Job Portal Application";
+  }, []);
   const handleLoadMore = async () => {
     if (!hasNextPage || loading) return;
 

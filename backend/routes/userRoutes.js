@@ -238,19 +238,22 @@ router.put(
     }
   },
 );
-router.put("/resume", authMiddleware, (req, res, next) => {
-  upload.single("resume")(req, res, (err) => {
-    if (err) {
-      console.log("MULTER ERROR:", err); // ← இந்த log பாருங்க
-      return res.status(400).json({ message: err.message });
-    }
-    next();
-  });
-}, updateResume);
+router.put(
+  "/resume",
+  authMiddleware,
+  (req, res, next) => {
+    upload.single("resume")(req, res, (err) => {
+      if (err) {
+        return res.status(400).json({ message: err.message });
+      }
+      next();
+    });
+  },
+  updateResume,
+);
 router.delete("/resume", authMiddleware, deleteResume);
 router.post("/forgot-password", async (req, res) => {
   try {
-    console.log("Received forgot password request for email:", req.body.email);
     const email = req.body.email;
     const user = await User.findOne({ mail: email });
     if (!user) {
@@ -365,4 +368,3 @@ router.post("/reset-password/:token", async (req, res) => {
   }
 });
 module.exports = router;
-

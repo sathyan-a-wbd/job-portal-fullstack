@@ -27,7 +27,7 @@ exports.updateResume = async (req, res) => {
           resource_type: "raw",
         });
       } catch (deleteErr) {
-        console.log("Old resume deletion failed:", deleteErr.message);
+        res.status(500).json({ message: "Old resume deletion failed" });
       }
     }
 
@@ -39,7 +39,7 @@ exports.updateResume = async (req, res) => {
         resumeName: req.file.originalname,
         resumePublicId: req.file.filename,
       },
-      { new: true }
+      { new: true },
     );
 
     return res.status(200).json({
@@ -97,7 +97,7 @@ exports.deleteResume = async (req, res) => {
         resume: "",
         resumeName: "",
         resumePublicId: "",
-      }
+      },
     );
 
     return res.status(200).json({

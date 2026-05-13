@@ -34,7 +34,9 @@ const Register = () => {
       toast.error("Register failed : Please try again");
     }
   };
-
+  React.useEffect(() => {
+    document.title = "Register - Job Portal";
+  }, []);
   return (
     <section className="min-h-screen w-full">
       <div className="w-full flex items-center justify-center py-10">

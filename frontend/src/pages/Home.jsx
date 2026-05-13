@@ -9,6 +9,10 @@ const Home = ({ jobDetails }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const userType = currentUser?.userType;
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = "Home - Job Portal";
+  }, []);
 
   return (
     <>

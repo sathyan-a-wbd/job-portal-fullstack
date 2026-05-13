@@ -9,7 +9,7 @@ exports.generateSummary = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      res.status(404).json({ message: "User Not Found" });
+      return res.status(404).json({ message: "User Not Found" });
     }
     //Check today's date
     const today = new Date().toDateString();
@@ -53,7 +53,7 @@ Education: ${education || "No education"}
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "openrouter/free",
+        model: "openai/gpt-oss-120b:free",
         messages: [
           {
             role: "user",
@@ -68,8 +68,9 @@ Education: ${education || "No education"}
         },
       },
     );
-    console.log("KEY:", process.env.OPEN_ROUTER_KEY);
-    let summary = response.data.choices[0].message.content;
+    let summary =
+      response?.data?.choices?.[0]?.message?.content?.trim() ||
+      "Failed to generate summary";
     summary = summary.split("\n\n")[0];
     //  Update usage
     user.aiSummaryCount += 1;

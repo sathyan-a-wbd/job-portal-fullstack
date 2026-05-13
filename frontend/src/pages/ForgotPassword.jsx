@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { forgotPassword } from "../redux/user/authSlice";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,9 @@ const ForgotPassword = () => {
   } = useForm({
     mode: "onChange",
   });
-
+  useEffect(() => {
+    document.title = "Forgot Password - Job Portal";
+  }, []);
   const onSubmit = async (data) => {
     try {
       await dispatch(forgotPassword(data)).unwrap();
