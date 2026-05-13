@@ -9,7 +9,6 @@ import NavbarProfileDashboard from "../NavbarProfileDashboard";
 import Searchbar from "../Searchbar";
 
 const SeekNav = () => {
-  const [notification, setNotification] = useState(10);
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [visibleNav, setVisibleNav] = useState(false);
@@ -62,6 +61,14 @@ const SeekNav = () => {
                 Jobs
                 <FaAnglesRight />
               </Link>
+              <Link
+                onClick={() => setMobileNav(false)}
+                className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
+                to={"/saved-jobs"}
+              >
+                Saved jobs
+                <FaAnglesRight />
+              </Link>
             </div>
           </ul>
         </nav>
@@ -98,12 +105,6 @@ const SeekNav = () => {
               className={`cursor-pointer relative  inline-block `}
             >
               <FaRegBell className="text-xl text-shadow " />
-              {notification === 0 ?
-                ""
-              : <span className=" text-[8px] text-white absolute w-5 h-5 -top-3 -right-2 rounded-[50%] flex items-center justify-center bg-amber-500">
-                  {notification}
-                </span>
-              }
             </Link>
             <div className="hidden items-center justify-center relative sm:flex">
               <FaUserAlt
