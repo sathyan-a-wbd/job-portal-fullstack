@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { FaRegBell, FaUser, FaUserAlt } from "react-icons/fa";
 import { FaAnglesRight } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import NavbarProfileDashboard from "../NavbarProfileDashboard";
 import Searchbar from "../Searchbar";
+import { useSelector } from "react-redux";
 
 const SeekNav = () => {
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [visibleNav, setVisibleNav] = useState(false);
+  const { currentUser } = useSelector((state) => state.auth);
 
+  const navigate = useNavigate();
   return (
     <section className={`w-full sm:shadow roboto sm:bg-white`}>
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
@@ -62,7 +65,12 @@ const SeekNav = () => {
                 <FaAnglesRight />
               </Link>
               <Link
-                onClick={() => setMobileNav(false)}
+                onClick={() => {
+                  setMobileNav(false);
+                  if (currentUser === null) {
+                    navigate("/login");
+                  }
+                }}
                 className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
                 to={"/saved-jobs"}
               >
