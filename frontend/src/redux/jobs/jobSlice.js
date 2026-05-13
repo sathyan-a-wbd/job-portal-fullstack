@@ -87,7 +87,7 @@ export const saveJob = createAsyncThunk(
   async (jobId, thunkAPI) => {
     try {
       const res = await API.post(
-        `/api/jobs/save/${jobId}`,
+        `/api/saved-jobs/save/${jobId}`,
         {},
         {
           withCredentials: true,
@@ -97,6 +97,22 @@ export const saveJob = createAsyncThunk(
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
+export const unsaveJob = createAsyncThunk(
+  "jobs/unsaveJob",
+  async (jobId, { rejectWithValue }) => {
+    try {
+      const response = await API.delete(`/api/saved-jobs/unsave/${jobId}`, {
+        withCredentials: true,
+      });
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong",
+      );
     }
   },
 );
@@ -228,18 +244,19 @@ const jobSlice = createSlice({
         state.applyStatus = "error";
         state.applyError = action.payload;
       })
-      .addCase(saveJob.pending, (state) => {
-        state.loading = true;
-      })
+
       .addCase(saveJob.fulfilled, (state, action) => {
         state.loading = false;
-        state.jobs = state.jobs.map((job) =>
-          job._id === action.payload.job ? { ...job, saved: true } : job,
-        );
+        state.savedJobs.push(action.payload.savedJob);
       })
       .addCase(saveJob.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(unsaveJob.fulfilled, (state, action) => {
+        state.savedJobs = state.savedJobs.filter(
+          (saved) => saved.job._id !== action.meta.arg,
+        );
       })
       .addCase(getSavedJobs.pending, (state) => {
         state.loading = true;
@@ -247,7 +264,7 @@ const jobSlice = createSlice({
       .addCase(getSavedJobs.fulfilled, (state, action) => {
         state.loading = false;
         state.savedJobs = action.payload.savedJobs;
-        console.log(action.payload.savedJobs);
+        console.log(action.payload);
       })
       .addCase(getSavedJobs.rejected, (state, action) => {
         state.loading = false;

@@ -30,7 +30,7 @@ const Jobs = () => {
   } = useSelector((state) => state.jobs);
   const { currentUser } = useSelector((state) => state.auth);
   const selectedJob = useSelector((state) => state.jobs.selectedJob);
-  const displayJob = selectedJob || jobs[0];
+
   const searchedJobs = useSelector((state) => state.jobs.searchedJobs);
   const handleLoadMore = async () => {
     if (!hasNextPage || loading) return;

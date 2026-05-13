@@ -3,11 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { PiSuitcaseSimpleLight } from "react-icons/pi";
 import { CiLocationOn } from "react-icons/ci";
 import { LuBookText } from "react-icons/lu";
-import { MdBookmarkBorder } from "react-icons/md";
+import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 
 import { LiaWalletSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
-import { saveJob, setSelectedJob } from "../redux/jobs/jobSlice";
+import { saveJob, setSelectedJob, unsaveJob } from "../redux/jobs/jobSlice";
 import { getRelativeTime } from "../utils/getRelativeTIme";
 
 const Jobcard = ({ jobDetails }) => {
@@ -17,14 +17,23 @@ const Jobcard = ({ jobDetails }) => {
   const dispatch = useDispatch();
   const userType = currentUser?.userType;
   const job = jobDetails;
-  const handleSave = async (id) => {
+
+  const { savedJobs = [] } = useSelector((state) => state.jobs);
+  const isSaved = savedJobs.some((saved) => saved?.job?._id === jobDetails._id);
+  const handleSave = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     try {
-      await dispatch(saveJob(id)).unwrap();
+      if (isSaved) {
+        await dispatch(unsaveJob(jobDetails._id)).unwrap();
+      } else {
+        await dispatch(saveJob(jobDetails._id)).unwrap();
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(job._id);
+
   if (!job) return null;
   return (
     <div className="bg-white ">
@@ -86,10 +95,28 @@ transition-all duration-300 overflow-hidden"
                 {getRelativeTime(job.createdAt)}
               </span>
               <button
-                onClick={() => handleSave(job._id)}
-                className={`flex items-center ${userType === "employer" ? "hidden" : "block"} gap-1 text-sm text-gray-500 tracking-wider`}
+                onClick={handleSave}
+                type="button"
+                className={`flex items-center gap-1 text-sm tracking-wider transition-transform duration-150 active:scale-125 ${
+                  userType === "employer" ? "hidden" : ""
+                }`}
               >
-                <MdBookmarkBorder size={20} /> {job.saved ? "Saved" : "Save"}
+                {isSaved ?
+                  <div className="flex items-center gap-1 text-blue-500">
+                    <MdBookmark
+                      size={20}
+                      className="mb-1 transition-all duration-200 active:scale-125"
+                    />
+                    <span className="poppins">Saved</span>
+                  </div>
+                : <div className="flex items-center gap-1 text-gray-500">
+                    <MdBookmarkBorder
+                      size={20}
+                      className="mb-1 transition-all duration-200 active:scale-125"
+                    />
+                    <span className="poppins">Save</span>
+                  </div>
+                }
               </button>
             </div>
           </div>

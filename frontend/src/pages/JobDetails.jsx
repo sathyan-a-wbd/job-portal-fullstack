@@ -6,7 +6,7 @@ import { CiLocationOn } from "react-icons/ci";
 import { CiMapPin } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { LuBookText } from "react-icons/lu";
-import { MdBookmarkBorder, MdArrowOutward } from "react-icons/md";
+import { MdBookmark, MdBookmarkBorder, MdArrowOutward } from "react-icons/md";
 import { MdBookmarkAdded } from "react-icons/md";
 import { LiaWalletSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
@@ -15,6 +15,8 @@ import {
   resetApplyStatus,
   setSelectedJob,
   applyToJob,
+  unsaveJob,
+  saveJob,
 } from "../redux/jobs/jobSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { getRelativeTime } from "../utils/getRelativeTIme";
@@ -71,6 +73,22 @@ const JobDetails = ({ defaultJob }) => {
     }
 
     dispatch(applyToJob({ jobId: job._id }));
+  };
+  const { savedJobs = [] } = useSelector((state) => state.jobs);
+  const isSaved = savedJobs.some((saved) => saved?.job?._id === job._id);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      if (isSaved) {
+        await dispatch(unsaveJob(job._id)).unwrap();
+      } else {
+        await dispatch(saveJob(job._id)).unwrap();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <section
@@ -146,14 +164,30 @@ const JobDetails = ({ defaultJob }) => {
                   {applyStatus === "idle" && "Apply"}
                 </button>
               }
-              <span
-                className={` ${currentUser?.userType === "employer" ? "hidden" : "block"}  flex items-center cursor-pointer gap-1 text-sm text-gray-500 tracking-wider`}
+              <button
+                onClick={handleSave}
+                type="button"
+                className={`flex items-center gap-1 text-sm tracking-wider transition-transform duration-150 active:scale-125 ${
+                  userType === "employer" ? "hidden" : ""
+                }`}
               >
-                <MdBookmarkBorder size={20} id="save" />{" "}
-                <label className={`cursor-pointer`} htmlFor="save">
-                  Save
-                </label>
-              </span>
+                {isSaved ?
+                  <div className="flex items-center gap-1 text-blue-500">
+                    <MdBookmark
+                      size={20}
+                      className="mb-1 transition-all duration-200 active:scale-125"
+                    />
+                    <span className="poppins">Saved</span>
+                  </div>
+                : <div className="flex items-center gap-1 text-gray-500">
+                    <MdBookmarkBorder
+                      size={20}
+                      className="mb-1 transition-all duration-200 active:scale-125"
+                    />
+                    <span className="poppins">Save</span>
+                  </div>
+                }
+              </button>
               <span className="flex gap-1 text-xs items-center">
                 {getRelativeTime(job.createdAt)}
               </span>

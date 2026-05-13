@@ -23,11 +23,12 @@ const saveJob = async (req, res) => {
       user: userId,
       job: jobId,
     });
+    const populatedSavedJob = await savedJob.populate("job");
 
     res.status(201).json({
       success: true,
       message: "Job saved successfully",
-      savedJob,
+      savedJob: populatedSavedJob,
     });
   } catch (err) {
     res.status(500).json({
@@ -42,7 +43,7 @@ const unsaveJob = async (req, res) => {
     const userId = req.userId;
     const { jobId } = req.params;
 
-    await SavedJob.findOneAndDelete({
+    const savedJob = await SavedJob.findOneAndDelete({
       user: userId,
       job: jobId,
     });
@@ -50,6 +51,7 @@ const unsaveJob = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Job removed from saved",
+      savedJob,
     });
   } catch (err) {
     res.status(500).json({

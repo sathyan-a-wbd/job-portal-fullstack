@@ -28,7 +28,7 @@ import { getProfile } from "./redux/user/authSlice";
 import EmployerRegister from "./components/Employer/EmpRegister";
 import EmpJobActions from "./components/Employer/EmpJobActions";
 import EmpJobPost from "./components/Employer/EmpJobPost";
-import { getMyJobs } from "./redux/jobs/jobSlice";
+import { getMyJobs, getSavedJobs } from "./redux/jobs/jobSlice";
 import { Toaster } from "react-hot-toast";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -57,6 +57,27 @@ export default function App() {
     fetchJobs();
   }, [dispatch]);
 
+  useEffect(() => {
+    async function fetchJobs() {
+      try {
+        await dispatch(getMyJobs()).unwrap();
+      } catch (err) {
+        console.error("Error fetching jobs:", err);
+      }
+    }
+    fetchJobs();
+  }, [dispatch]);
+  useEffect(() => {
+    async function fetchSavedJobs() {
+      try {
+        await dispatch(getSavedJobs()).unwrap();
+      } catch (err) {
+        console.error("Error fetching jobs:", err);
+      }
+    }
+    fetchSavedJobs();
+  }, [dispatch]);
+
   return (
     <>
       {/* <GlobalLoader /> */}
@@ -65,7 +86,14 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home jobDetails={jobDetails} />} />
           <Route path="/jobs-list" element={<Jobs jobDetails={jobDetails} />} />
-
+          <Route
+            path="/saved-jobs"
+            element={
+              <ProtectedRoute>
+                <SavedJobs />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/notifications" element={<Notifications />} />
         </Route>
 
@@ -114,14 +142,6 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Applicants />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/saved-jobs"
-            element={
-              <ProtectedRoute>
-                <SavedJobs />
               </ProtectedRoute>
             }
           />
