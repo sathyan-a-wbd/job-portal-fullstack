@@ -75,7 +75,7 @@ const JobDetails = ({ defaultJob }) => {
     dispatch(applyToJob({ jobId: job._id }));
   };
   const { savedJobs = [] } = useSelector((state) => state.jobs);
-  const isSaved = savedJobs.some((saved) => saved?.job?._id === job._id);
+  const isSaved = savedJobs.some((saved) => saved?.job?._id === job?._id);
 
   const handleSave = async (e) => {
     e.preventDefault();

@@ -36,7 +36,7 @@ import Applicants from "./pages/Applicants";
 import SavedJobs from "./pages/SavedJobs";
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
-
+  const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   useEffect(() => {
     async function fetchProfile() {
@@ -47,26 +47,22 @@ export default function App() {
       }
     }
     fetchProfile();
-    async function fetchJobs() {
-      try {
-        await dispatch(getMyJobs()).unwrap();
-      } catch (err) {
-        console.error("Error fetching jobs:", err);
-      }
-    }
-    fetchJobs();
   }, [dispatch]);
 
   useEffect(() => {
     async function fetchJobs() {
       try {
-        await dispatch(getMyJobs()).unwrap();
+        if (currentUser?.userType === "employer") {
+          await dispatch(getMyJobs()).unwrap();
+        }
       } catch (err) {
         console.error("Error fetching jobs:", err);
       }
     }
+
     fetchJobs();
-  }, [dispatch]);
+  }, [dispatch, currentUser]);
+
   useEffect(() => {
     async function fetchSavedJobs() {
       try {

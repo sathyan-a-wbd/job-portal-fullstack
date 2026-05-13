@@ -20,7 +20,7 @@ const Jobcard = ({ jobDetails }) => {
   const job = jobDetails;
 
   const { savedJobs = [] } = useSelector((state) => state.jobs);
-  const isSaved = savedJobs.some((saved) => saved?.job?._id === jobDetails._id);
+  const isSaved = savedJobs.some((saved) => saved?.job?._id === job._id);
   const handleSave = async (e) => {
     e.preventDefault();
     e.stopPropagation();
