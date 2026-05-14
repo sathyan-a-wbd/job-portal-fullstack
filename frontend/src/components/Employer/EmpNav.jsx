@@ -7,7 +7,7 @@ import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import NavbarProfileDashboard from "../NavbarProfileDashboard";
 import Searchbar from "../Searchbar";
-import { useSelector } from "react-redux";
+
 import { CiSquarePlus } from "react-icons/ci";
 import { LuPlus } from "react-icons/lu";
 
@@ -15,11 +15,8 @@ const EmpNav = () => {
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
 
-  const isLogin = useSelector((state) => state.users.isLogin);
   return (
-    <section
-      className={`w-full sm:shadow roboto sm:bg-white ${isLogin ? "hidden" : "block"} `}
-    >
+    <section className={`w-full sm:shadow roboto sm:bg-white `}>
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
         {/* mobile-nav-bar-icon */}
         <div className="flex items-center justify-between relative sm:hidden w-10">
