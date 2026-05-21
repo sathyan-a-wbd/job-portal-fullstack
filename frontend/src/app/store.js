@@ -4,7 +4,7 @@ import jobReducer from "../redux/jobs/jobSlice";
 import authReducer from "../redux/user/authSlice";
 import uiReducer from "../redux/ui/uiSlice";
 import applicantReducer from "../redux/applicants/applicants";
-
+import resumeReducer from "../redux/resume/resumeSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -12,5 +12,6 @@ export const store = configureStore({
     // users: userReducer,
     ui: uiReducer,
     applicant: applicantReducer,
+    resume: resumeReducer,
   },
 });

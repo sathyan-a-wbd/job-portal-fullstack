@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { forgotPassword } from "../redux/user/authSlice";
-import toast from "react-hot-toast";
+import { showSuccess, showError } from "../utils/toastIndicator";
 import { useEffect } from "react";
 
 const ForgotPassword = () => {
@@ -22,9 +22,9 @@ const ForgotPassword = () => {
   const onSubmit = async (data) => {
     try {
       await dispatch(forgotPassword(data)).unwrap();
-      toast.success("Reset link sent to your email");
+      showSuccess("Reset link sent to your email");
     } catch (err) {
-      toast.error(err?.message || "Something went wrong");
+      showError(err?.message || "Something went wrong");
     }
   };
 

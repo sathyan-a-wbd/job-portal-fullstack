@@ -8,6 +8,9 @@ import { MdCake, MdOutlineAlternateEmail } from "react-icons/md";
 import { TiLocation } from "react-icons/ti";
 import { FiEdit2 } from "react-icons/fi";
 import { IoMailOpenOutline } from "react-icons/io5";
+import { FaRegAddressBook } from "react-icons/fa";
+import { GoOrganization } from "react-icons/go";
+import { RiMapPinRangeLine } from "react-icons/ri";
 
 import { IoLink } from "react-icons/io5";
 
@@ -76,7 +79,7 @@ const EmpDashBoard = () => {
           <ul className="flex flex-col poppins gap-4">
             {/* details */}
             <li className="flex text-gray-600 items-center gap-2">
-              <VscSymbolNamespace size={20} />
+              <GoOrganization size={20} />
               <span className="text-sm poppins">{user?.companyName}</span>
             </li>
             <li className="flex text-gray-600 items-center gap-2">
@@ -86,6 +89,16 @@ const EmpDashBoard = () => {
             <li className="flex text-gray-600 items-center gap-2">
               <TiLocation size={20} />
               <span className="text-sm poppins">{user?.companyLocation}</span>
+            </li>
+            <li className="flex text-gray-600 items-center gap-2">
+              <FaRegAddressBook size={20} />
+              <span className="text-sm poppins">{user?.companyAddress}</span>
+            </li>
+            <li className="flex text-gray-600 items-center gap-2">
+              <RiMapPinRangeLine size={20} />
+              <span className="text-sm poppins">
+                {user?.companyLocationMapLink}
+              </span>
             </li>
 
             <Link

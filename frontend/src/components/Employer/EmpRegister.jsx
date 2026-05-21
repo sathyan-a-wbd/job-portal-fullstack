@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { employerRegisterSchema } from "../../features/validations/employerRegisterSchema";
 import { createUser } from "../../redux/user/authSlice";
 import { useDispatch } from "react-redux";
-import { toast } from "react-hot-toast";
+import { showError, showSuccess } from "../../utils/toastIndicator";
 const EmployerRegister = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,13 +31,13 @@ const EmployerRegister = () => {
       );
 
       if (createUser.fulfilled.match(res)) {
-        toast.success("Employer registered");
+        showSuccess("Employer registered");
         navigate("/login");
       } else {
-        toast.error(res.payload?.message || "Register failed");
+        showError(res.payload?.message || "Register failed");
       }
     } catch (error) {
-      toast.error("Register failed : Please try again");
+      showError(error.message || "Register failed : Please try again");
     }
   };
 

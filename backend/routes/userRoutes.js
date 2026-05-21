@@ -53,6 +53,8 @@ router.post("/register", async (req, res) => {
         companyLocation,
         website,
         description,
+        companyAddress: "",
+        companyLocationMapLink: "",
       });
     }
 
@@ -172,6 +174,8 @@ router.put(
         companyLocation,
         website,
         description,
+        companyAddress,
+        companyLocationMapLink,
       } = req.body;
 
       // UPDATE USER
@@ -223,6 +227,8 @@ router.put(
             website,
             description,
             profileImage,
+            companyAddress,
+            companyLocationMapLink,
           },
           { new: true },
         );
@@ -238,20 +244,20 @@ router.put(
     }
   },
 );
-router.put(
-  "/resume",
-  authMiddleware,
-  (req, res, next) => {
-    upload.single("resume")(req, res, (err) => {
-      if (err) {
-        return res.status(400).json({ message: err.message });
-      }
-      next();
-    });
-  },
-  updateResume,
-);
-router.delete("/resume", authMiddleware, deleteResume);
+// router.put(
+//   "/resume",
+//   authMiddleware,
+//   (req, res, next) => {
+//     upload.single("resume")(req, res, (err) => {
+//       if (err) {
+//         return res.status(400).json({ message: err.message });
+//       }
+//       next();
+//     });
+//   },
+//   updateResume,
+// );
+// router.delete("/resume", authMiddleware, deleteResume);
 router.post("/forgot-password", async (req, res) => {
   try {
     const email = req.body.email;

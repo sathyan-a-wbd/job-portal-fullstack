@@ -9,43 +9,15 @@ import { HiOutlineUpload } from "react-icons/hi";
 import { FiEdit2 } from "react-icons/fi";
 import { LuFolderPlus } from "react-icons/lu";
 import { Link } from "react-router-dom";
-import { toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
 
-import { deleteResume, uploadResume ,getProfile} from "../../redux/user/authSlice";
-import API from "../../services/newApi";
+import {  useSelector } from "react-redux";
+
+import ResumeManager from "../../pages/ResumeManager";
 const JobseekerDashboard = () => {
   const { currentUser: user } = useSelector((state) => state.auth);
 
-  const [file, setFile] = useState(null);
-  const [updateMenu, setUpdateMenu] = useState(false);
-  const dispatch = useDispatch();
-  const showUploadUI = updateMenu || !user?.resume;
+  const showUploadUI =  !user?.resume;
 
-  const handleUpload = async () => {
-  if (!file) return toast.error("Please select a resume file");
-
-  try {
-    await dispatch(uploadResume(file)).unwrap();
-    await dispatch(getProfile()).unwrap()
-    toast.success("Resume uploaded successfully");
-    setUpdateMenu(false);
-    setFile(null);
-  } catch (err) {
-   toast.error(typeof err === "string" ? err : "Failed to upload resume");
-  }
-};
-
-const handleDelete = async () => {
-  try {
-    await dispatch(deleteResume()).unwrap();
-    toast.success("Resume deleted successfully");
-    setUpdateMenu(false);
-    setFile(null);
-  } catch (err) {
-    toast.error(err || "Failed to delete resume");
-  }
-};
   return (
     <section className="w-full px-6 justify-center poppins flex my-5 ">
       <div className="flex flex-col w-full sm:w-150 max-w-150  justify-center gap-5">
@@ -157,12 +129,14 @@ const handleDelete = async () => {
               >
                 Add
               </Link>
-              <Link
-                to={"/profile-edit/?userEdit=educationEdit"}
-                className="poppins text-sm text-[#4485fd] cursor-pointer"
-              >
-                Edit
-              </Link>
+              {user?.educations?.length > 0 && (
+                <Link
+                  to={"/profile-edit/?userEdit=educationEdit"}
+                  className="poppins text-sm text-[#4485fd] cursor-pointer"
+                >
+                  Edit
+                </Link>
+              )}
             </div>
           </div>
           <ul className="flex flex-col poppins gap-4">
@@ -228,17 +202,19 @@ const handleDelete = async () => {
             {/* editoption */}
             <h2 className="poppins font-medium">Languages</h2>
             <div className="flex items-center gap-4" to={"/profile-edit"}>
+              {user?.languages?.length > 0 && (
+                <Link
+                  to={"/profile-edit/?userEdit=languagesEdit"}
+                  className="poppins text-sm text-[#4485fd] cursor-pointer"
+                >
+                  Edit
+                </Link>
+              )}
               <Link
                 to={"/profile-edit/?userEdit=languages"}
                 className="poppins text-sm text-[#4485fd] cursor-pointer"
               >
                 Add
-              </Link>
-              <Link
-                to={"/profile-edit/?userEdit=languagesEdit"}
-                className="poppins text-sm text-[#4485fd] cursor-pointer"
-              >
-                Edit
               </Link>
             </div>
           </div>
@@ -267,12 +243,14 @@ const handleDelete = async () => {
               >
                 Add
               </Link>
-              <Link
-                className="poppins text-sm text-[#4485fd] cursor-pointer"
-                to={"/profile-edit/?userEdit=expEdit"}
-              >
-                Edit
-              </Link>
+              {user?.experience?.length > 0 && (
+                <Link
+                  className="poppins text-sm text-[#4485fd] cursor-pointer"
+                  to={"/profile-edit/?userEdit=expEdit"}
+                >
+                  Edit
+                </Link>
+              )}
             </div>
           </div>
           <ul className="flex flex-col poppins gap-4">
@@ -299,106 +277,18 @@ const handleDelete = async () => {
           </ul>
         </div>
         {/* Resume Section */}
-      <div className="flex flex-col gap-4 poppins justify-between rounded-xl shadow-lg p-5">
-  <div className="flex items-center justify-between">
-    <h2 className="poppins font-medium">Resume</h2>
-    {user?.resume && !showUploadUI && (
-      <span className="text-xs text-green-600 font-medium">Uploaded</span>
-    )}
-  </div>
-
-  <div className="p-4 rounded-2xl border border-[#d9e9ff] bg-gradient-to-r from-[#eef6ff] to-[#dff0ff]">
-    {showUploadUI ? (
-      <div className="flex flex-col items-center justify-center gap-4 border-2 border-dashed border-[#4485fd]/40 rounded-2xl py-8 px-4">
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          id="resumeUpload"
-          className="hidden"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-
-        <label
-          htmlFor="resumeUpload"
-          className="cursor-pointer flex flex-col items-center gap-3"
-        >
-          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow">
-            <HiOutlineUpload size={22} className="text-[#4485fd]" />
+        <div className="flex flex-col gap-4 poppins justify-between rounded-xl shadow-lg p-5">
+          <div className="flex items-center justify-between">
+            <h2 className="poppins font-medium">Resume</h2>
+            {user?.resume && !showUploadUI && (
+              <span className="text-xs text-green-600 font-medium">
+                Uploaded
+              </span>
+            )}
           </div>
 
-          <p className="text-sm text-gray-700 font-medium">
-            {file
-              ? file.name
-              : user?.resume
-              ? "Choose new resume to update"
-              : "Upload your latest resume"}
-          </p>
-
-          <span className="text-xs text-gray-500">
-            PDF, DOC, DOCX only (Max 2MB)
-          </span>
-        </label>
-
-        <button
-          type="button"
-          onClick={handleUpload}
-          disabled={!file}
-          className={`px-8 py-2 rounded-full text-white transition ${
-            file
-              ? "bg-[#4485fd] hover:opacity-90 cursor-pointer"
-              : "bg-gray-300 cursor-not-allowed"
-          }`}
-        >
-          Save Resume
-        </button>
-      </div>
-    ) : (
-      <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#4485fd]/10 flex items-center justify-center">
-            <FiFileText className="text-[#4485fd]" size={18} />
-          </div>
-<div className="flex flex-col">
-  <a
-    href={`https://docs.google.com/viewer?url=${encodeURIComponent(user?.resume)}&embedded=true`}
-    target="_blank"
-    rel="noreferrer"
-    className="text-sm font-medium text-gray-700 hover:text-[#4485fd]"
-  >
-    {user?.resumeName}
-  </a>
-  <a
-    href={user?.resume}
-    download={user?.resumeName}
-    className="text-xs text-[#4485fd] hover:underline"
-  >
-    Download
-  </a>
-</div>
-         
+          <ResumeManager />
         </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="w-9 h-9 rounded-full border border-red-200 text-red-500 flex items-center justify-center hover:bg-red-50 cursor-pointer"
-          >
-            <MdDeleteOutline size={18} />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setUpdateMenu(true)}
-            className="bg-[#4485fd] px-6 py-2 rounded-full text-white cursor-pointer hover:opacity-90"
-          >
-            Update
-          </button>
-        </div>
-      </div>
-    )}
-  </div>
-</div>
       </div>
     </section>
   );

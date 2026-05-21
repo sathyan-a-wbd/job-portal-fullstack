@@ -29,6 +29,14 @@ const jobSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    companyAddress: {
+      type: String,
+      default: "",
+    },
+    companyLocationMapLink: {
+      type: String,
+      default: "",
+    },
     workLocation: {
       type: String,
       enum: ["Remote", "On-site", "Hybrid"], // Restricts to these 3 options

@@ -51,7 +51,11 @@ const NavbarProfileDashboard = ({ setMobileNav, setVisibleNav }) => {
                   {currentUser?.profileImage ?
                     <img
                       src={currentUser?.profileImage}
-                      alt="profile-img"
+                      width={100}
+                      height={100}
+                      loading="eager"
+                      fetchPriority="high"
+                      alt=""
                       className="w-full h-full object-cover"
                     />
                   : <h1 className="text-3xl font-bold text-white">

@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
-import { toast } from "react-hot-toast";
+import { showError, showSuccess } from "../utils/toastIndicator";
 import {
   generateSummary,
   updateUser,
@@ -91,7 +91,7 @@ const ProfileEdit = () => {
       setDraft((prev) => ({ ...prev, profileSummary: res.summary }));
       setSummaryRemains(res.remaining);
     } catch (err) {
-      toast.error("Summary generation failed:", err);
+      showError(err);
     }
   };
 
@@ -119,10 +119,59 @@ const ProfileEdit = () => {
       const { _id, ...cleanData } = updatedDraft;
 
       await dispatch(updateUser(cleanData)).unwrap();
-      toast.success("Deleted successfully");
+      showSuccess("Deleted successfully");
     } catch (err) {
-      toast.error("Delete failed", err);
+      showError(err);
     }
+  };
+
+  const convertToWebP = (file) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+
+      img.onload = () => {
+        // Resize image
+        const MAX_WIDTH = 300;
+        const MAX_HEIGHT = 300;
+
+        let width = img.width;
+        let height = img.height;
+
+        // Maintain aspect ratio
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = (height * MAX_WIDTH) / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = (width * MAX_HEIGHT) / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to WebP with quality compression
+        const webpBase64 = canvas.toDataURL("image/webp", 0.7);
+
+        resolve(webpBase64);
+
+        URL.revokeObjectURL(img.src);
+      };
+
+      img.onerror = (error) => {
+        reject(error);
+      };
+
+      img.src = URL.createObjectURL(file);
+    });
   };
 
   const handleUpdate = async (e) => {
@@ -131,10 +180,12 @@ const ProfileEdit = () => {
     try {
       let updatedDraft = { ...draft };
 
+      // Education
       if (userEdit === "education") {
         updatedDraft.educations = [...(draft.educations || []), inputForm];
       }
 
+      // Experience
       if (userEdit === "exp") {
         updatedDraft.experience = [...(draft.experience || []), inputExpForm];
       }
@@ -143,31 +194,38 @@ const ProfileEdit = () => {
         const { _id, ...cleanData } = dataToSave;
 
         await dispatch(updateUser(cleanData)).unwrap();
+
         await dispatch(getProfile()).unwrap();
+
         setImageFile(null);
         setPreviewImage(null);
-        toast.success("Profile Updated Successfully!");
+
+        showSuccess("Profile Updated Successfully!");
+
         navigate("/profile-dashboard");
       };
 
+      // Profile Image Upload
       if (imageFile) {
+        // Max upload size check
         if (imageFile.size > 2 * 1024 * 1024) {
-          toast.error("Image size should be less than 2MB");
+          showError("Image size should be less than 2MB");
           return;
         }
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          updatedDraft.profileImage = reader.result;
-          await saveAndNavigate(updatedDraft);
-        };
-        reader.readAsDataURL(imageFile);
+
+        // Convert image to WebP
+        const webpImage = await convertToWebP(imageFile);
+
+        updatedDraft.profileImage = webpImage;
+
+        await saveAndNavigate(updatedDraft);
       } else {
         await saveAndNavigate(updatedDraft);
       }
     } catch (err) {
-      toast.error(
-        reduxError?.message || "Something went wrong while updating.",
-      );
+      console.log(err);
+
+      showError(reduxError?.message || "Something went wrong while updating.");
     }
   };
 
@@ -296,6 +354,18 @@ const ProfileEdit = () => {
                 key: "website",
                 type: "text",
                 placeholder: "Company website",
+              },
+              {
+                label: "Company address",
+                key: "companyAddress",
+                type: "text",
+                placeholder: "Company address",
+              },
+              {
+                label: "Company Location Link",
+                key: "companyLocationMapLink",
+                type: "text",
+                placeholder: "Company location map link",
               },
             ].map(({ label, key, type, placeholder }) => (
               <div key={key} className="input-field w-full flex flex-col gap-1">

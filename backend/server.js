@@ -9,7 +9,7 @@ const aiRoutes = require("./routes/aiRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoute");
 const SaveJobRoutes = require("./routes/routes.savedJob");
-
+const resumeRoutes = require("./routes/resumeRoutes");
 connectDB();
 
 const app = express();
@@ -39,6 +39,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api", applicationRoutes);
 app.use("/api/saved-jobs", SaveJobRoutes);
 
+app.use("/api/resume", resumeRoutes);
 app.get("/", (req, res) => {
   res.send("API Running");
 });

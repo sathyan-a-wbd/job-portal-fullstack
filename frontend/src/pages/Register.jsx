@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../features/validations/registerSchema";
 import { createUser } from "../redux/user/authSlice";
 import { useDispatch } from "react-redux";
-import toast from "react-hot-toast";
+import { showSuccess, showError } from "../utils/toastIndicator";
 
 const Register = () => {
   const location = useLocation();
@@ -25,13 +25,15 @@ const Register = () => {
       const res = await dispatch(createUser(filterData));
 
       if (createUser.fulfilled.match(res)) {
-        toast.success("User created");
+        showSuccess("User created");
         navigate("/login");
       } else {
-        toast.error(res.payload?.message || "Register failed");
+        showError(res.payload?.message || "Register failed");
       }
     } catch (error) {
-      toast.error("Register failed : Please try again");
+      showError(
+        error?.response?.message || "Register failed : Please try again",
+      );
     }
   };
   React.useEffect(() => {

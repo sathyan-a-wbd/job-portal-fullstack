@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createJob, getMyJobs } from "../../redux/jobs/jobSlice";
-import toast from "react-hot-toast";
+import { showSuccess, showError } from "../../utils/toastIndicator";
 
 const EmpJobPost = () => {
   const dispatch = useDispatch();
@@ -45,10 +45,10 @@ const EmpJobPost = () => {
 
     if (createJob.fulfilled.match(res)) {
       await dispatch(getMyJobs()).unwrap();
-      toast.success("Job Created Successfully");
+      showSuccess("Job Created Successfully");
       navigate("/");
     } else {
-      toast.error(res.payload?.message || "Failed to create job");
+      showError(res.payload?.message || "Failed to create job");
     }
   };
 

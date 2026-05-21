@@ -35,7 +35,7 @@ const Applicants = () => {
       return;
     }
 
-    setSelectedApp(app.applicant);
+    setSelectedApp(app);
     setIsDrawerOpen(true);
 
     dispatch(getEachApp(userId)).unwrap();
@@ -73,7 +73,7 @@ const Applicants = () => {
     ),
   ];
   useEffect(() => {
-    document.title = `Applicants }`;
+    document.title = `Applicants`;
   }, [applicants]);
   // SHOW EMPTY ONLY AFTER LOADING
   if (!loading && (!applicants || applicants.length === 0)) {

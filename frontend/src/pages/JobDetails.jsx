@@ -1,6 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
 import { PiSuitcaseSimpleLight } from "react-icons/pi";
 import { CiLocationOn } from "react-icons/ci";
 import { CiMapPin } from "react-icons/ci";
@@ -12,7 +17,6 @@ import { LiaWalletSolid } from "react-icons/lia";
 import { GoDotFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  resetApplyStatus,
   setSelectedJob,
   applyToJob,
   unsaveJob,
@@ -20,7 +24,8 @@ import {
 } from "../redux/jobs/jobSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { getRelativeTime } from "../utils/getRelativeTIme";
-import toast from "react-hot-toast";
+import { showError, showSuccess } from "../utils/toastIndicator";
+import { getJobSeekerApplications } from "../redux/applicants/applicants";
 
 const JobDetails = ({ defaultJob }) => {
   const { currentUser } = useSelector((state) => state.auth);
@@ -29,13 +34,16 @@ const JobDetails = ({ defaultJob }) => {
   const userType = currentUser?.userType;
   const jobId = searchParams.get("job_id");
   const dispatch = useDispatch();
+  const locationUrl = useLocation();
+  const isPureJobs = locationUrl.pathname === "/job-details";
   const job =
     Array.isArray(jobs) ?
       jobs.find((j) => j._id.toString() === jobId) || defaultJob
     : [];
-  const { selectedJob, applyStatus, applyError } = useSelector(
-    (state) => state.jobs,
-  );
+  const { selectedJob } = useSelector((state) => state.jobs);
+  const { applicants } = useSelector((state) => state.applicant);
+
+  const isApplied = applicants?.some((j) => j?.job?._id === job?._id);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -56,23 +64,35 @@ const JobDetails = ({ defaultJob }) => {
     };
   }, [selectedJob]);
   useEffect(() => {
-    if (applyStatus === "applied") {
-      toast.success("Application submitted successfully!");
-    }
-    if (applyStatus === "error" && applyError) {
-      toast.error(applyError);
-    }
-  }, [applyStatus, applyError]);
+    dispatch(getJobSeekerApplications());
+  }, []);
+  const [applied, setApplied] = useState(isApplied);
   useEffect(() => {
-    dispatch(resetApplyStatus());
-  }, [job?._id]);
+    setApplied(isApplied);
+  }, [isApplied]);
   const handleApply = async () => {
     if (!currentUser) {
       navigate("/login");
       return;
     }
 
-    dispatch(applyToJob({ jobId: job._id }));
+    try {
+      setApplied(true);
+
+      await dispatch(applyToJob({ jobId: job._id })).unwrap();
+
+      showSuccess("Application submitted successfully!");
+
+      dispatch(getJobSeekerApplications());
+    } catch (error) {
+      setApplied(false);
+
+      showError(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to submit application",
+      );
+    }
   };
   const { savedJobs = [] } = useSelector((state) => state.jobs);
   const isSaved = savedJobs.some((saved) => saved?.job?._id === job?._id);
@@ -96,10 +116,12 @@ const JobDetails = ({ defaultJob }) => {
   };
   return (
     <section
-      className={`fixed w-full  h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:p-2 top-0 left-0 `}
+      className={`fixed w-full h-screen overflow-y-auto custom-scroll z-30 md:relative md:z-0 md:p-2 top-0 left-0 `}
     >
       {job && (
-        <div className=" bg-[#ffff] flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl sm:shadow-lg ring-1 ring-[#bcd4e6]/50 hover:ring-[#a1caf1] px-5 py-4 overflow-hidden">
+        <div
+          className={` flex flex-col gap-5 cursor-pointer  w-full tracking-wide rounded-lg sm:rounded-3xl  ${isPureJobs ? "md:px-30 md:py-10 bg-white md:bg-transparent " : "sm:shadow-lg bg-[#ffff] ring-1 hover:ring-[#a1caf1] ring-[#bcd4e6]/50 "}  px-5 py-4 overflow-hidden`}
+        >
           <Link
             to={"/"}
             className="w-full md:hidden flex items-center justify-end"
@@ -119,7 +141,14 @@ const JobDetails = ({ defaultJob }) => {
             <div className="flex items-center justify-between py-2">
               <div>
                 <h2 className="text-[24px] font-semibold">{job.title}</h2>
-                <h4 className="text-gray-600 font-medium">{job.companyName}</h4>
+                <a
+                  href={job.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 font-light"
+                >
+                  {job.companyName}
+                </a>
               </div>
             </div>
             <div className="flex flex-col gap-2 justifu-center whitespace-nowrap text-gray-600  text-[14px] tracking-wide">
@@ -152,20 +181,11 @@ const JobDetails = ({ defaultJob }) => {
                 </a>
               : <button
                   onClick={handleApply}
-                  disabled={
-                    applyStatus === "loading" || applyStatus === "applied"
-                  }
-                  className={`${currentUser?.userType === "employer" ? "hidden" : "flex"} flex gap-2 items-center px-8 py-2 text-white rounded-3xl transition-all
-          ${
-            applyStatus === "applied" ? "bg-green-500 cursor-not-allowed"
-            : applyStatus === "loading" ? "bg-blue-300 cursor-wait"
-            : "bg-linear-to-r from-indigo-500 via-[#6c00ff] to-[#8c00ff] cursor-pointer hover:scale-105 hover:shadow-[0_10px_40px_rgba(0,0,0,0.18)] transition duration-300 ease-in-out"
-          }`}
+                  disabled={applied}
+                  className={`${currentUser?.userType === "employer" ? "hidden" : "flex"} flex gap-2 items-center px-8 py-2 text-white rounded-3xl transition-all bg-blue-500 hover:bg-blue-600 active:bg-blue-700  disabled:bg-blue-200 disabled:cursor-not-allowed
+         `}
                 >
-                  {applyStatus === "loading" && "Applying..."}
-                  {applyStatus === "applied" && "✓ Applied"}
-                  {applyStatus === "error" && "Retry"}
-                  {applyStatus === "idle" && "Apply"}
+                  {applied ? "Applied" : "Apply"}
                 </button>
               }
               <button
@@ -200,6 +220,22 @@ const JobDetails = ({ defaultJob }) => {
           <hr className="border-t border-gray-100" />
 
           <article className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <h3 className="poppins font-medium text-gray-700">Address:</h3>
+              <span className=" text-sm items-center inter text-gray-600">
+                {job?.companyAddress}
+                {job.companyLocationMapLink ?
+                  <a
+                    href={job.companyLocationMapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className=" text-blue-500 poppins"
+                  >
+                    (map)
+                  </a>
+                : null}
+              </span>
+            </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-[20px] font-semibold text-gray-700">
                 Job Description
@@ -279,6 +315,15 @@ const JobDetails = ({ defaultJob }) => {
             </div>
             <hr className="border-t border-gray-100" />
           </article>
+          <div className="absolute flex md:hidden bottom-2 right-0  items-center justify-between w-full px-2 py-2">
+            <button
+              onClick={handleApply}
+              disabled={applied}
+              className="text-center w-full shadow-lg  py-2 text-white rounded-lg transition-all bg-blue-500 hover:bg-blue-600 active:bg-blue-700 disabled:bg-blue-200 disabled:cursor-not-allowed"
+            >
+              {applied ? "Applied" : "Apply"}
+            </button>
+          </div>
         </div>
       )}
     </section>

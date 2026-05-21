@@ -82,6 +82,10 @@ RGB 100, 149, 237
 CMYK 58, 37, 0, 7*/
 
 /* horizontal scrollbar */
+.custom-scroll-hidden::-webkit-scrollbar {
+  height: 0px;
+  width: 0px;
+}
 .custom-scroll::-webkit-scrollbar {
   height: 2px;
   width: 5px;

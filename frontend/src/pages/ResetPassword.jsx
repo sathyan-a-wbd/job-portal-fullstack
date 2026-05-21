@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import API from "../services/newApi";
-import toast from "react-hot-toast";
+import { showError, showSuccess } from "../utils/toastIndicator";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -21,13 +21,13 @@ const ResetPassword = () => {
         password: data.password,
       });
 
-      toast.success("Password updated successfully");
+      showSuccess("Password updated successfully");
 
       setTimeout(() => {
         navigate("/login", { replace: true });
       }, 1500);
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      showError(err?.response?.data?.message || "Something went wrong");
     }
   };
   React.useEffect(() => {

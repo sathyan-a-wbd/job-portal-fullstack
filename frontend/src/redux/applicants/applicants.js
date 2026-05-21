@@ -43,9 +43,26 @@ export const updateAppStatus = createAsyncThunk(
     }
   },
 );
+export const getJobSeekerApplications = createAsyncThunk(
+  "applicant/getJobSeekerApplications",
+  async (_, thunkAPI) => {
+    try {
+      const res = await API.get("/api/my-applications");
+
+      return res.data.applications;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || {
+          message: error.message,
+        },
+      );
+    }
+  },
+);
 const initialState = {
-  applicants: null,
+  applicants: [],
   currentApp: null,
+  updatingStatusId: null,
   loading: false,
   error: null,
 };
@@ -78,29 +95,41 @@ const applicantSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateAppStatus.pending, (state) => {
+      .addCase(updateAppStatus.pending, (state, action) => {
         state.loading = true;
+        state.error = null;
+        state.updatingStatusId = action.meta.arg.appId;
       })
+
       .addCase(updateAppStatus.fulfilled, (state, action) => {
         state.loading = false;
+        state.updatingStatusId = null;
 
-        const { _id, status } = action.payload.application;
+        const updatedApplication = action.payload.application;
 
-        // update applicants list
-        if (state.applicants) {
-          const appIndex = state.applicants.findIndex((app) => app._id === _id);
-
-          if (appIndex !== -1) {
-            state.applicants[appIndex].status = status;
-          }
-        }
-
-        // update current opened applicant
-        if (state.currentApp?.appId === _id) {
-          state.currentApp.status = status;
-        }
+        state.applicants = state.applicants.map((app) =>
+          app._id === updatedApplication._id ?
+            {
+              ...app,
+              status: updatedApplication.status,
+            }
+          : app,
+        );
       })
+
       .addCase(updateAppStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.updatingStatusId = null;
+        state.error = action.payload;
+      })
+      .addCase(getJobSeekerApplications.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getJobSeekerApplications.fulfilled, (state, action) => {
+        state.loading = false;
+        state.applicants = action.payload;
+      })
+      .addCase(getJobSeekerApplications.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

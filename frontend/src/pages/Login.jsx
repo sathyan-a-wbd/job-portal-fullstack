@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../features/validations/loginSchema";
 import { useDispatch } from "react-redux";
 import { getProfile, loginUser } from "../redux/user/authSlice";
-import toast from "react-hot-toast";
+import { showSuccess, showError } from "../utils/toastIndicator";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,11 +27,11 @@ const Login = () => {
 
       await dispatch(getProfile()).unwrap();
 
-      toast.success("Logged in successfully");
+      showSuccess("Logged in successfully");
 
       navigate("/profile-dashboard", { replace: true });
     } catch (err) {
-      toast.error("Login Error:", err);
+      showError(err?.message || "Login Error:");
     }
   };
   const token = localStorage.getItem("token");

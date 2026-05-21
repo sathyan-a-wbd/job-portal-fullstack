@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllJobs, resetApplyStatus } from "../redux/jobs/jobSlice";
 
-import { toast } from "react-hot-toast";
+import { showError, showSuccess } from "../utils/toastIndicator";
 import JobCardSkeleton from "../components/Loaders/JobCardSkeleton";
 import JobDetailsSkeleton from "../components/Loaders/JobDetailsSkeleton";
 const Jobs = () => {
@@ -16,7 +16,7 @@ const Jobs = () => {
         await dispatch(getAllJobs(1)).unwrap();
         dispatch(resetApplyStatus());
       } catch (err) {
-        toast.error("Error fetching jobs:", err);
+        showError(err?.message || "Error fetching jobs:");
       }
     };
     fetchAllJobs();
@@ -42,7 +42,8 @@ const Jobs = () => {
     try {
       await dispatch(getAllJobs(currentPage + 1)).unwrap();
     } catch (err) {
-      toast.error("Failed to load more jobs");
+      console.log(err);
+      showError("Failed to load more jobs");
     }
   };
   const filteredJobs =
@@ -89,7 +90,7 @@ const Jobs = () => {
     <section className="grid grid-cols-1 items-center w-full gap-10 px-0 md:px-10 ">
       <div className="flex flex-col md:flex-row md:ring-1 md:ring-[#bcd4e6]/30 sm:py-5 rounded-xl ">
         <div
-          className={`md:h-screen ${id ? "sc" : "block"} md:block md:overflow-y-scroll custom-scroll w-full md:w-[45%] px-4 md:px-8 md:border-r-2  md:border-[#bcd4e6]/30 md:shadow-lg rounded-sm`}
+          className={`md:h-screen ${id ? "sc" : "block"} md:block md:overflow-y-scroll custom-scroll w-full md:w-[45%] px-4 md:px-8 md:border-r-2  md:border-[#bcd4e6]/30 `}
         >
           <h3 className="my-5 poppins flex gap-2 items-center text-md text-gray-700">
             <span className="font-light">{filteredJobs.length}+</span> jobs for

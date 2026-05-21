@@ -47,8 +47,9 @@ const Jobcard = ({ jobDetails }) => {
           onClick={() => dispatch(setSelectedJob(true))}
           replace
           to={
-            userType === "employer" ?
-              `${locationUrl.pathname}`
+            userType === "employer" ? locationUrl.pathname
+            : locationUrl.pathname === "/saved-jobs" ?
+              `/job-details?job_id=${job._id}`
             : `${locationUrl.pathname}?job_id=${job._id}`
           }
           state={{ fromList: true }}

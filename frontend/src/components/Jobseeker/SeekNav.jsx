@@ -8,14 +8,25 @@ import { IoClose } from "react-icons/io5";
 import NavbarProfileDashboard from "../NavbarProfileDashboard";
 import Searchbar from "../Searchbar";
 import { useSelector } from "react-redux";
-
+import ActivityDropdown from "../SmallComponets/ActivityDropdown";
+import { FaChevronDown, FaBookmark, FaFileAlt } from "react-icons/fa";
+import J from "../../../public/J.webp";
+import Jobist from "../../../public/jobist.webp";
 const SeekNav = () => {
   const [userHover, setUserHover] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [visibleNav, setVisibleNav] = useState(false);
   const { currentUser } = useSelector((state) => state.auth);
-
   const navigate = useNavigate();
+  const handleProtectedRoute = (path) => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
+    navigate(path);
+  };
+
   return (
     <section className={`w-full sm:shadow roboto sm:bg-white`}>
       <div className="w-full flex z-10 flex-wrap text-gray-600 gap-y-5 items-center justify-between px-4 sm:px-10 py-5 relative">
@@ -33,7 +44,7 @@ const SeekNav = () => {
 
         {/* Mobile-navbar */}
         <nav
-          className={`sm:order-2 text-gray-800 sm:hidden poppins fixed w-[80%] bg-[#f4f9fd] border border-gray-200 transition-transform duration-500 ease-in-out rounded-r-3xl shadow-2xl backdrop:blur-3xl h-screen top-0 left-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
+          className={`sm:order-2 text-gray-800 scroll-smooth custom-scroll-hidden sm:hidden poppins fixed w-[80%] bg-[#f4f9fd] border border-gray-200 transition-transform duration-500 ease-in-out rounded-r-3xl shadow-2xl backdrop:blur-3xl h-screen overflow-y-auto  top-0 left-0 ${mobileNav ? "translate-x-0" : "-translate-x-full"}`}
         >
           <ul className="px-3 py-20 h-screen flex flex-col gap-5 items-center tracking-wider">
             <h3 className="w-full text-left px-1 text-sm tracking-widest text-[#4485fd]">
@@ -64,19 +75,49 @@ const SeekNav = () => {
                 Jobs
                 <FaAnglesRight />
               </Link>
-              <Link
-                onClick={() => {
-                  setMobileNav(false);
-                  if (!currentUser) {
-                    navigate("/login");
-                  }
-                }}
-                className="text-sm text-[#4485fd]  px-2 py-2 w-full  flex items-center justify-between"
-                to={"/saved-jobs"}
+              <div
+                onClick={() => setMobileNav(false)}
+                className=" relative w-full mb-4 border border-white/10 rounded-2xl shadow-xl p-3 z-50 animate-fadeIn"
               >
-                Saved jobs
-                <FaAnglesRight />
-              </Link>
+                <h4 className="text-xs text-[#6ca0dc] mb-3">Activity</h4>
+                <div className="flex flex-col gap-2">
+                  {/* Saved Jobs */}
+                  <button
+                    onClick={() => handleProtectedRoute("/saved-jobs")}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-200 text-left"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <FaBookmark className="text-blue-600" />
+                    </div>
+
+                    <div>
+                      <h3 className="font-medium text-gray-800">Saved Jobs</h3>
+                      <p className="text-xs text-gray-500">
+                        View your bookmarked jobs
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Applications */}
+                  <button
+                    onClick={() => handleProtectedRoute("/my-applications")}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-200 text-left"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                      <FaFileAlt className="text-green-600" />
+                    </div>
+
+                    <div>
+                      <h3 className="font-medium text-gray-800">
+                        My Applications
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        Track application status
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
             </div>
           </ul>
         </nav>
@@ -90,15 +131,13 @@ const SeekNav = () => {
         {/* navlinks */}
         <nav className="order-2 sm:block hidden">
           <ul className="flex gap-5 poppins text-sm items-center tracking-wide">
-            <li className="hover:text-[#6ca0dc]  poppins transition-all duration-300 ease-in-out">
+            <li className="hover:text-[#6ca0dc] font-medium text-gray-600  poppins transition-all duration-300 ease-in-out">
               <Link to={"/"}>Home</Link>
             </li>
-            <li className="hover:text-[#6ca0dc] poppins transition-all duration-300 ease-in-out">
+            <li className="hover:text-[#6ca0dc] font-medium text-gray-600 poppins transition-all duration-300 ease-in-out">
               <Link to={"/jobs-list"}>Jobs</Link>
             </li>
-            <li className="hover:text-[#6ca0dc] poppins transition-all duration-300 ease-in-out">
-              <Link to={"/saved-jobs"}>Saved Jobs</Link>
-            </li>
+            <ActivityDropdown currentUser={currentUser} />
           </ul>
         </nav>
         {/* search-bar */}
@@ -108,12 +147,6 @@ const SeekNav = () => {
         {/* profile and notification */}
         <nav className="order-3 lg:order-4">
           <ul className="flex items-center gap-5">
-            <Link
-              to={"/notifications"}
-              className={`cursor-pointer relative  inline-block `}
-            >
-              <FaRegBell className="text-xl text-shadow " />
-            </Link>
             <div className="hidden items-center justify-center relative sm:flex">
               <FaUserAlt
                 className="text-xl text-shadow cursor-pointer"

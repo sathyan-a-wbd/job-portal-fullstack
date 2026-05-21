@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IoSearch } from "react-icons/io5";
 import { MdDelete, MdEdit, MdOutlinePreview } from "react-icons/md";
 import JobDetails from "../../pages/JobDetails";
-import { toast } from "react-hot-toast";
+import { showError, showSuccess } from "../../utils/toastIndicator";
 import { deleteJob, getMyJobs } from "../../redux/jobs/jobSlice";
 import JobCardSkeleton from "../Loaders/JobCardSkeleton";
 
@@ -16,7 +16,8 @@ const EmpDetails = () => {
       try {
         await dispatch(getMyJobs()).unwrap();
       } catch (err) {
-        toast.error("Error fetching jobs:", err);
+        console.error(err);
+        showError("Error fetching jobs:");
       }
     };
     fetchJobs();
@@ -38,9 +39,9 @@ const EmpDetails = () => {
       try {
         await dispatch(deleteJob(id)).unwrap();
 
-        toast.success("Job Deleted");
+        showSuccess("Job Deleted");
       } catch (err) {
-        toast.error(err);
+        showError(err?.message || "Delete Failed");
       }
     }
   };

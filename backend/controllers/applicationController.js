@@ -46,15 +46,30 @@ const applyToJob = async (req, res) => {
 };
 
 // GET /api/applications/my
+
 const getMyApplications = async (req, res) => {
   try {
-    const applications = await Application.find({ applicant: req.userId })
-      .populate("job", "title companyName location salary resume")
+    const userId = req.userId;
+
+    const applications = await Application.find({
+      applicant: userId,
+    })
+      .populate({
+        path: "job",
+        select: "_id title companyName location salary",
+      })
       .sort({ createdAt: -1 });
 
-    res.status(200).json(applications);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(200).json({
+      success: true,
+      applications,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch applications",
+      error: error.message,
+    });
   }
 };
 // api/applications/job/${jobId}
@@ -161,34 +176,59 @@ const getEachApp = async (req, res) => {
 };
 
 // PATCH /api/applications/:id/status  - employer updates status
+
 const updateApplicationStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
 
-    // Only employers allowed
+    // Authorization
     if (req.userRole !== "employer") {
-      return res.status(403).json({ message: "Not authorized" });
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized",
+      });
     }
 
+    // Validation
     const validStatuses = ["pending", "reviewed", "shortlisted", "rejected"];
+
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application status",
+      });
     }
 
+    // Find + Update
     const application = await Application.findByIdAndUpdate(
       id,
       { status },
-      { new: true },
+      {
+        new: true,
+        runValidators: true,
+      },
     );
 
     if (!application) {
-      return res.status(404).json({ message: "Application not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Application not found",
+      });
     }
 
-    res.status(200).json({ message: "Status updated", application });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(200).json({
+      success: true,
+      message: "Application status updated successfully",
+      application,
+    });
+  } catch (error) {
+    console.error("Update Application Status Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -197,5 +237,6 @@ module.exports = {
   getMyApplications,
   getApplicants,
   getEachApp,
+
   updateApplicationStatus,
 };

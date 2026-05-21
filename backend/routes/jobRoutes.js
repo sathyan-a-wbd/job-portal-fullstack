@@ -19,9 +19,12 @@ router.post("/create-job", authMiddleware, async (req, res) => {
     const job = await Job.create({
       ...req.body,
 
-      companyName: employer.companyName,
+      companyName: employer?.companyName,
 
-      companyEmail: employer.companyEmail,
+      companyEmail: employer?.companyEmail,
+      companyAddress: employer?.companyAddress,
+
+      companyLocationMapLink: employer?.companyLocationMapLink,
       createdBy: req.userId,
     });
 

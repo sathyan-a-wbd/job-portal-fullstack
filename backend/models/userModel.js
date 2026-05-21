@@ -44,6 +44,8 @@ const employerSchema = new Schema({
   companyEmail: { type: String, default: "" },
   companyLocation: { type: String, default: "" },
   website: { type: String, default: "" },
+  companyAddress: { type: String, default: "" },
+  companyLocationMapLink: { type: String, default: "" },
   description: { type: String, default: "" },
   profileImage: { type: String, default: "" },
 });
@@ -119,6 +121,10 @@ const jobseekerSchema = new Schema({
   lastSummaryDate: {
     type: Date,
     default: null,
+  },
+  resumeUrl: {
+    type: String,
+    default: "",
   },
   resumeName: {
     type: String,

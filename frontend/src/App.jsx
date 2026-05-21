@@ -16,8 +16,9 @@ import AuthLayout from "./layouts/AuthLayout";
 
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
+import JobDetails from "./pages/JobDetails";
 import Dashboard from "./pages/Dashboard";
-import Notifications from "./pages/Notifications";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProfileEdit from "./components/ProfileEdit";
@@ -34,6 +35,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Applicants from "./pages/Applicants";
 import SavedJobs from "./pages/SavedJobs";
+import MyApplications from "./pages/MyApplications";
 export default function App() {
   const jobDetails = useSelector((state) => state.jobs.jobs);
   const { currentUser } = useSelector((state) => state.auth);
@@ -82,6 +84,7 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home jobDetails={jobDetails} />} />
           <Route path="/jobs-list" element={<Jobs jobDetails={jobDetails} />} />
+          <Route path="/job-details" element={<JobDetails />} />
           <Route
             path="/saved-jobs"
             element={
@@ -90,7 +93,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/notifications" element={<Notifications />} />
+          <Route
+            path="/my-applications"
+            element={
+              <ProtectedRoute>
+                <MyApplications />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         <Route element={<AuthLayout />}>

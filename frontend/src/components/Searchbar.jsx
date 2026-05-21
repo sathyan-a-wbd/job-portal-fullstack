@@ -18,6 +18,7 @@ const Searchbar = () => {
     path === "/empregister" ||
     path === "/forgot-password" ||
     path === "/saved-jobs" ||
+    path === "/my-applications" ||
     path.startsWith("/reset-password");
   const [searchInputs, setSearchInputs] = React.useState({
     jobTitle: "",
