@@ -1,6 +1,6 @@
 import axios from "axios";
 import API from "../services/newApi";
-const API_URL = `http://localhost:8000/api/resume`;
+const API_URL = `https://job-portal-fullstack-44qz.onrender.com/api/resume`;
 
 // Attach token from localStorage to every request
 const authHeaders = () => ({
